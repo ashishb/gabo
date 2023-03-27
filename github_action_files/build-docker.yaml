@@ -1,0 +1,39 @@
+---
+name: Build Docker image
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "**/Dockerfile"
+      - "src/**"
+      - ".dockerignore"
+      - "Makefile"
+      - ".github/workflows/build-docker.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**/Dockerfile"
+      - "src/**"
+      - ".dockerignore"
+      - "Makefile"
+      - ".github/workflows/build-docker.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  # Run this locally with act - https://github.com/nektos/act
+  # act -j buildDocker
+  buildDocker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Docker build
+        run: make docker_build
