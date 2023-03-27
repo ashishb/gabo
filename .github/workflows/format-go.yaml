@@ -1,0 +1,52 @@
+---
+name: validate Go code formatting
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "**/*.go"
+      - ".github/workflows/format-go.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**/*.go"
+      - ".github/workflows/format-go.yaml"
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  validateCodeFormatGo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        # Without quotes, 1.20 becomes 1.2!
+        go-version: ["1.20"]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      # Ref: https://github.com/actions/cache/blob/main/examples.md#go---modules
+      # Warning: This is Linux specific
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Validate code formatting
+        run: test -z $(gofmt -l .)
