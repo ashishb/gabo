@@ -1,0 +1,46 @@
+---
+name: Lint Dockerfiles
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "**/Dockerfile"
+      - ".github/workflows/lint-docker.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**/Dockerfile"
+      - ".github/workflows/lint-docker.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Run this locally with act - https://github.com/nektos/act
+  # act -j lintDocker
+  lintDocker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # To lint multiple docker files
+      # Ref: https://github.com/hadolint/hadolint-action/issues/54#issuecomment-1130157411
+      - name: Install hadolint
+        run: |
+          docker pull hadolint/hadolint:latest
+          container_id=$(docker create hadolint/hadolint)
+          docker cp $container_id:/bin/hadolint .
+
+      - name: Run hadolint
+        run: >
+          ./hadolint
+          --ignore DL3007
+          --ignore DL3008
+          --ignore DL3013
+          --ignore DL3018
+          $(find . -iname Dockerfile)
