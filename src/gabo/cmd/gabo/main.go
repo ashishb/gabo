@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/ashishb/gabo/src/gabo/internal/analyzer"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"os"
@@ -28,6 +29,9 @@ func main() {
 	switch *_mode {
 	case _modeSuggest:
 		log.Info().Msgf("Analyzing dir '%s'", *_gitDir)
+		analyzer.Analyze(*_gitDir)
+	case _modeGenerate:
+		log.Fatal().Msgf("Mode not implemented yet: %s", _modeGenerate)
 	}
 }
 

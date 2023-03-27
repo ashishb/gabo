@@ -1,5 +1,5 @@
 ---
-name: validate Go code formatting
+name: Validate Go code formatting
 
 on:  # yamllint disable-line rule:truthy
   push:
