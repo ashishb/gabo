@@ -27,6 +27,11 @@ func isDockerLinterImplemented(yamlData []string) bool {
 	return contains(yamlData, "hadolint")
 }
 
+func isPythonLinterImplemented(yamlData []string) bool {
+	// This should be made more accurate over time
+	return contains(yamlData, "pylint")
+}
+
 func contains(yamlData []string, pattern string) bool {
 	for _, data := range yamlData {
 		if strings.Contains(data, pattern) {

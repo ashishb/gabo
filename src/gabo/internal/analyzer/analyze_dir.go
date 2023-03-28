@@ -37,7 +37,10 @@ func Analyze(rootDir string) {
 		{name: "Go Formatter", checker: isGoFormatterImplemented},
 	}
 	tools["Dockerfile"] = []_Analyzer{
-		{name: "Docker linter", checker: isDockerLinterImplemented},
+		{name: "Docker Linter", checker: isDockerLinterImplemented},
+	}
+	tools["py"] = []_Analyzer{
+		{name: "Python Linter", checker: isPythonLinterImplemented},
 	}
 
 	for ext, analyzers := range tools {
