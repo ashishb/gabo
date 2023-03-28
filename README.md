@@ -8,6 +8,14 @@
 The actions runs only on push/pull requests against `main` and `master` branch, by default.
 Feel free to add more branches if you want to runs these checks when push/pull request against any other branches.
 
+## Installation
+
+```bash
+go install github.com/ashishb/gabo@latest
+```
+
+## Usage
+
 ```bash
 $ gabo --help
   -dir string
