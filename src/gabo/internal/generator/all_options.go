@@ -10,6 +10,7 @@ import (
 type Option string
 
 const (
+	_LintAndroid     Option = "lint-android"
 	_LintDocker      Option = "lint-docker"
 	_LintGo          Option = "lint-go"
 	_LintMarkdown    Option = "lint-markdown"
@@ -23,8 +24,6 @@ const (
 	_BuildGo      Option = "build-go"
 	_BuildPython  Option = "build-python"
 
-	// Make this code correct first
-	// _LintAndroid  Option   = "lint-android"
 	// _LintHtml     Option   = "lint-html"
 
 	// TODO(ashishb): Enable these
@@ -34,6 +33,7 @@ const (
 )
 
 var _options = []Option{
+	_LintAndroid,
 	_LintDocker,
 	_LintGo,
 	_LintMarkdown,
@@ -68,6 +68,8 @@ func IsValid(val string) bool {
 // repoDir is root dir of the repository
 func (option Option) getOutputFileName(repoDir string) string {
 	switch option {
+	case _LintAndroid:
+		return getPath(repoDir, "lint-android.yaml")
 	case _LintDocker:
 		return getPath(repoDir, "lint-docker.yaml")
 	case _LintGo:
@@ -97,6 +99,8 @@ func (option Option) getOutputFileName(repoDir string) string {
 
 func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	switch option {
+	case _LintAndroid:
+		return &_lintAndroidYaml, nil
 	case _LintDocker:
 		return &_lintDockerYaml, nil
 	case _LintGo:
