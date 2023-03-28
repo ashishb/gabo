@@ -19,12 +19,17 @@ var (
 	_validModes = []string{_modeGenerate, _modeSuggest}
 	_mode       = flag.String("mode", _modeSuggest,
 		fmt.Sprintf("Mode to operate in: %s", _validModes))
-	_gitDir = flag.String("dir", ".", "Path to root of git directory")
+	_gitDir  = flag.String("dir", ".", "Path to root of git directory")
+	_verbose = flag.Bool("verbose", false, "Enable verbose logging")
 )
 
 func main() {
 	flag.Parse()
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	if *_verbose {
+		zerolog.SetGlobalLevel(zerolog.TraceLevel)
+	}
 	validateFlags()
 	switch *_mode {
 	case _modeSuggest:
