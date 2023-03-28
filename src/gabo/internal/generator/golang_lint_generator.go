@@ -14,7 +14,7 @@ const _goLangLintTask = `
         uses: golangci/golangci-lint-action@v3
         with:
           # Directory containing go.mod file
-          working-directory: %s
+          working-directory: "%s"
 `
 
 func generateGoLintYaml(repoDir string) (*string, error) {
