@@ -19,19 +19,24 @@ const (
 	_LintSolidity    Option = "lint-solidity"
 	_LintYaml        Option = "lint-yaml"
 
-	_BuildAndroid Option = "build-android"
-	_BuildDocker  Option = "build-docker"
-	_BuildGo      Option = "build-go"
+	_BuildAndroid     Option = "build-android"
+	_BuildDocker      Option = "build-docker"
+	_TranslateAndroid Option = "translate-android"
 
 	// _LintHtml     Option   = "lint-html"
 
 	// TODO(ashishb): Enable these
-	// _AutoTranslateAndroid Option = "auto-translate-android"
+	// _BuildGo      Option = "build-go"
 	// _TestGo Option = "test-go"
 	// _TestPython Option = "test-python"
 )
 
 var _options = []Option{
+	_TranslateAndroid,
+
+	_BuildAndroid,
+	_BuildDocker,
+
 	_LintAndroid,
 	_LintDocker,
 	_LintGo,
@@ -40,10 +45,6 @@ var _options = []Option{
 	_LintShellScript,
 	_LintSolidity,
 	_LintYaml,
-
-	_BuildAndroid,
-	_BuildDocker,
-	_BuildGo,
 }
 
 func GetOptions() []string {
@@ -87,8 +88,8 @@ func (option Option) getOutputFileName(repoDir string) string {
 		return getPath(repoDir, "build-android.yaml")
 	case _BuildDocker:
 		return getPath(repoDir, "build-docker.yaml")
-	case _BuildGo:
-		return getPath(repoDir, "build-go.yaml")
+	case _TranslateAndroid:
+		return getPath(repoDir, "translate-android.yaml")
 	default:
 		log.Panic().Msgf("unexpected case: %s ", option)
 		return ""
@@ -118,8 +119,9 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 		return generateBuildAndroidYaml(repoDir)
 	case _BuildDocker:
 		return generateBuildDockerYaml(repoDir)
-	case _BuildGo:
-		fallthrough
+	case _TranslateAndroid:
+		return &_translateAndroidYaml, nil
+
 	default:
 		return nil, fmt.Errorf("unexpected case: %s ", option)
 	}
