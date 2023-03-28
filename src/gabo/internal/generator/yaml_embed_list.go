@@ -17,4 +17,7 @@ var (
 	_lintSolidityYaml string
 	//go:embed data/lint-yaml.yaml
 	_lintYamlYaml string
+
+	//go:embed data/build-docker-incomplete.yaml
+	_buildDockerYaml string
 )

@@ -1,0 +1,37 @@
+---
+name: Build Docker image(s)
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "Dockerfile"
+      - ".github/workflows/build-docker.yaml"
+      # TODO: Replace "*" with the list of all dir(s) whose
+      # contents will go into the Dockerfile here
+      # If you have multiple lots of docker files then it might be best to duplicate
+      # this file and use separate path filters in every file for efficiency
+      - "*"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "Dockerfile"
+      - ".github/workflows/build-docker.yaml"
+      # TODO: Replace "*" with the list of all dir(s) whose
+      # contents will go into the Dockerfile here
+      # If you have multiple lots of docker files then it might be best to duplicate
+      # this file and use separate path filters in every file for efficiency
+      - "*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  buildDocker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
