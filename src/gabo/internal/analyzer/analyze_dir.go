@@ -42,6 +42,13 @@ func Analyze(rootDir string) {
 	tools["py"] = []_Analyzer{
 		{name: "Python Linter", checker: isPythonLinterImplemented},
 	}
+	tools["sh"] = []_Analyzer{
+		{name: "Shellscript Linter", checker: isShellScriptLinterImplemented},
+	}
+	tools["bash"] = tools["sh"]
+	tools["sol"] = []_Analyzer{
+		{name: "Solidity Linter", checker: isSolidityLinterImplemented},
+	}
 
 	for ext, analyzers := range tools {
 		if extToFreqMap[ext] <= 0 {
