@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type _Analyzer struct {
@@ -36,6 +35,9 @@ func Analyze(rootDir string) {
 	tools["go"] = []_Analyzer{
 		{name: "Go Linter", checker: isGoLinterImplemented},
 		{name: "Go Formatter", checker: isGoFormatterImplemented},
+	}
+	tools["Dockerfile"] = []_Analyzer{
+		{name: "Docker linter", checker: isDockerLinterImplemented},
 	}
 
 	for ext, analyzers := range tools {
@@ -70,33 +72,4 @@ func getYamlData(dir string) ([]string, error) {
 		data = append(data, string(tmp))
 	}
 	return data, nil
-}
-
-func isYamlLinterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "uses: ibiqlik/action-yamllint")
-}
-
-func isMarkdownLinterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "mdl ")
-}
-
-func isGoLinterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "uses: golangci/golangci-lint-action")
-}
-
-func isGoFormatterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "gofmt -l")
-}
-
-func contains(yamlData []string, pattern string) bool {
-	for _, data := range yamlData {
-		if strings.Contains(data, pattern) {
-			return true
-		}
-	}
-	return false
 }
