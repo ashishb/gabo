@@ -24,4 +24,7 @@ var (
 	_buildAndroidYaml string
 	//go:embed data/build-docker-incomplete.yaml
 	_buildDockerYaml string
+
+	//go:embed data/translate-android.yaml
+	_translateAndroidYaml string
 )
