@@ -6,24 +6,26 @@ on:  # yamllint disable-line rule:truthy
     branches: [main, master]
     paths:
       - ".github/workflows/lint-android.yaml"
+      # TODO: Make this more narrow in case of a monorepo
       - "**/*.java"
       - "**/*.kt"
       - "**/*.gradle"
       - "**/gradle/**"
       - "gradle.properties"
       - "gradlew*"
-      - '**/gradle-wrapper.jar'
+      - "**/gradle-wrapper.jar"
   push:
     branches: [main, master]
     paths:
       - ".github/workflows/lint-android.yaml"
+      # TODO: Make this more narrow in case of a monorepo
       - "**/*.java"
       - "**/*.kt"
       - "**/*.gradle"
       - "**/gradle/**"
       - "gradle.properties"
       - "gradlew*"
-      - '**/gradle-wrapper.jar'
+      - "**/gradle-wrapper.jar"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -20,6 +20,8 @@ var (
 	//go:embed data/lint-yaml.yaml
 	_lintYamlYaml string
 
+	//go:embed data/build-android-incomplete.yaml
+	_buildAndroidYaml string
 	//go:embed data/build-docker-incomplete.yaml
 	_buildDockerYaml string
 )
