@@ -44,7 +44,8 @@ func main() {
 		log.Info().Msgf("Analyzing dir '%s'", *_gitDir)
 		analyzer.Analyze(*_gitDir)
 	case _modeGenerate:
-		err := generator.Generate(generator.Option(*_option), *_force)
+		err := generator.NewGenerator(*_gitDir, *_force).Generate(
+			generator.Option(*_option))
 		if err != nil {
 			log.Fatal().Err(err).Msgf("Failed to generate")
 		}

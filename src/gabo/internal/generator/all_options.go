@@ -64,29 +64,29 @@ func IsValid(val string) bool {
 	return false
 }
 
-func (option Option) getOutputFileName() string {
+func (option Option) getOutputFileName(gitDir string) string {
 	switch option {
 	case _LintDocker:
-		return getPath("lint-docker.yaml")
+		return getPath(gitDir, "lint-docker.yaml")
 	case _LintGo:
-		return getPath("lint-go.yaml")
+		return getPath(gitDir, "lint-go.yaml")
 	case _LintMarkdown:
-		return getPath("lint-markdown.yaml")
+		return getPath(gitDir, "lint-markdown.yaml")
 	case _LintPython:
-		return getPath("lint-python.yaml")
+		return getPath(gitDir, "lint-python.yaml")
 	case _LintShellScript:
-		return getPath("lint-shell-script.yaml")
+		return getPath(gitDir, "lint-shell-script.yaml")
 	case _LintSolidity:
-		return getPath("lint-solidity.yaml")
+		return getPath(gitDir, "lint-solidity.yaml")
 	case _LintYaml:
-		return getPath("lint-yaml.yaml")
+		return getPath(gitDir, "lint-yaml.yaml")
 
 	case _BuildDocker:
-		return getPath("build-docker.yaml")
+		return getPath(gitDir, "build-docker.yaml")
 	case _BuildGo:
-		return getPath("build-go.yaml")
+		return getPath(gitDir, "build-go.yaml")
 	case _BuildPython:
-		return getPath("build-python.yaml")
+		return getPath(gitDir, "build-python.yaml")
 	default:
 		log.Panic().Msgf("unexpected case: %s ", option)
 		return ""
@@ -124,6 +124,6 @@ func (option Option) getYamlConfig() string {
 	}
 }
 
-func getPath(fileName string) string {
-	return filepath.Join(".github", "workflows", fileName)
+func getPath(gitDir string, fileName string) string {
+	return filepath.Join(gitDir, ".github", "workflows", fileName)
 }
