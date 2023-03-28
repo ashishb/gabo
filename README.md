@@ -7,3 +7,17 @@
 
 The actions runs only on push/pull requests against `main` and `master` branch, by default.
 Feel free to add more branches if you want to runs these checks when push/pull request against any other branches.
+
+```bash
+$ gabo --help
+  -dir string
+      Path to root of git directory (default ".")
+  -for string
+      Generate GitHub Action (options: translate-android,build-android,build-docker,lint-android,lint-docker,lint-go,lint-markdown,lint-python,lint-shell-script,lint-solidity,lint-yaml)
+  -force
+      Force overwrite existing files (in generate mode)
+  -mode string
+      Mode to operate in: [generate analyze] (default "analyze")
+  -verbose
+      Enable verbose logging
+```
