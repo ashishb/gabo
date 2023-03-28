@@ -3,6 +3,8 @@ package generator
 import _ "embed"
 
 var (
+	//go:embed data/lint-android.yaml
+	_lintAndroidYaml string
 	//go:embed data/lint-docker.yaml
 	_lintDockerYaml string
 	//go:embed data/lint-go-incomplete.yaml

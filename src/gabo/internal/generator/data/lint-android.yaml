@@ -6,9 +6,10 @@ on:  # yamllint disable-line rule:truthy
     branches: [main, master]
     paths:
       - ".github/workflows/lint-android.yaml"
-      - "*/src/**"
-      - "gradle/**"
-      - "**.gradle"
+      - "**/*.java"
+      - "**/*.kt"
+      - "**/*.gradle"
+      - "**/gradle/**"
       - "gradle.properties"
       - "gradlew*"
       - '**/gradle-wrapper.jar'
@@ -16,9 +17,10 @@ on:  # yamllint disable-line rule:truthy
     branches: [main, master]
     paths:
       - ".github/workflows/lint-android.yaml"
-      - "*/src/**"
-      - "gradle/**"
-      - "**.gradle"
+      - "**/*.java"
+      - "**/*.kt"
+      - "**/*.gradle"
+      - "**/gradle/**"
       - "gradle.properties"
       - "gradlew*"
       - '**/gradle-wrapper.jar'
@@ -58,5 +60,5 @@ jobs:
 
       - uses: yutailang0119/action-android-lint@v3
         with:
-          report-path: build/reports/*.xml  # Support glob patterns by https://www.npmjs.com/package/@actions/glob
+          report-path: "**/build/reports/*.xml"  # Support glob patterns by https://www.npmjs.com/package/@actions/glob
         continue-on-error: false  # If annotations contain error of severity, action-android-lint exit 1.
