@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"fmt"
 	"github.com/rs/zerolog/log"
 	"path/filepath"
 )
@@ -64,53 +65,54 @@ func IsValid(val string) bool {
 	return false
 }
 
-func (option Option) getOutputFileName(gitDir string) string {
+// repoDir is root dir of the repository
+func (option Option) getOutputFileName(repoDir string) string {
 	switch option {
 	case _LintDocker:
-		return getPath(gitDir, "lint-docker.yaml")
+		return getPath(repoDir, "lint-docker.yaml")
 	case _LintGo:
-		return getPath(gitDir, "lint-go.yaml")
+		return getPath(repoDir, "lint-go.yaml")
 	case _LintMarkdown:
-		return getPath(gitDir, "lint-markdown.yaml")
+		return getPath(repoDir, "lint-markdown.yaml")
 	case _LintPython:
-		return getPath(gitDir, "lint-python.yaml")
+		return getPath(repoDir, "lint-python.yaml")
 	case _LintShellScript:
-		return getPath(gitDir, "lint-shell-script.yaml")
+		return getPath(repoDir, "lint-shell-script.yaml")
 	case _LintSolidity:
-		return getPath(gitDir, "lint-solidity.yaml")
+		return getPath(repoDir, "lint-solidity.yaml")
 	case _LintYaml:
-		return getPath(gitDir, "lint-yaml.yaml")
+		return getPath(repoDir, "lint-yaml.yaml")
 
 	case _BuildDocker:
-		return getPath(gitDir, "build-docker.yaml")
+		return getPath(repoDir, "build-docker.yaml")
 	case _BuildGo:
-		return getPath(gitDir, "build-go.yaml")
+		return getPath(repoDir, "build-go.yaml")
 	case _BuildPython:
-		return getPath(gitDir, "build-python.yaml")
+		return getPath(repoDir, "build-python.yaml")
 	default:
 		log.Panic().Msgf("unexpected case: %s ", option)
 		return ""
 	}
 }
 
-func (option Option) getYamlConfig() string {
+func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	switch option {
 	case _LintDocker:
-		return _lintDockerYaml
+		return &_lintDockerYaml, nil
 	// TODO(ashishb): This does not handle monorepo case just yet
 	// fix that
 	case _LintGo:
-		return _lintGoYaml
+		return generateGoLintYaml(repoDir)
 	case _LintMarkdown:
-		return _lintMarkdownYaml
+		return &_lintMarkdownYaml, nil
 	case _LintPython:
-		return _lintPythonYaml
+		return &_lintPythonYaml, nil
 	case _LintShellScript:
-		return _lintShellScriptYaml
+		return &_lintShellScriptYaml, nil
 	case _LintSolidity:
-		return _lintSolidityYaml
+		return &_lintSolidityYaml, nil
 	case _LintYaml:
-		return _lintYamlYaml
+		return &_lintYamlYaml, nil
 
 	case _BuildDocker:
 		fallthrough
@@ -119,11 +121,10 @@ func (option Option) getYamlConfig() string {
 	case _BuildPython:
 		fallthrough
 	default:
-		log.Panic().Msgf("unexpected case: %s ", option)
-		return ""
+		return nil, fmt.Errorf("unexpected case: %s ", option)
 	}
 }
 
-func getPath(gitDir string, fileName string) string {
-	return filepath.Join(gitDir, ".github", "workflows", fileName)
+func getPath(rootDir string, fileName string) string {
+	return filepath.Join(rootDir, ".github", "workflows", fileName)
 }
