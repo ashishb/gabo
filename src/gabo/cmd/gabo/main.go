@@ -4,10 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"github.com/ashishb/gabo/src/gabo/internal/analyzer"
+	"github.com/ashishb/gabo/src/gabo/internal/generator"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -16,11 +18,17 @@ const (
 )
 
 var (
+	_verbose = flag.Bool("verbose", false, "Enable verbose logging")
+
 	_validModes = []string{_modeGenerate, _modeSuggest}
 	_mode       = flag.String("mode", _modeSuggest,
 		fmt.Sprintf("Mode to operate in: %s", _validModes))
-	_gitDir  = flag.String("dir", ".", "Path to root of git directory")
-	_verbose = flag.Bool("verbose", false, "Enable verbose logging")
+	_gitDir = flag.String("dir", ".", "Path to root of git directory")
+
+	_option = flag.String("for", "", fmt.Sprintf("Generate GitHub Action for (options: %s)",
+		strings.Join(generator.GetOptions(), ",")))
+	_force = flag.Bool("force", false,
+		fmt.Sprintf("Force overwrite existing files (in %s mode)", _modeGenerate))
 )
 
 func main() {
@@ -36,7 +44,10 @@ func main() {
 		log.Info().Msgf("Analyzing dir '%s'", *_gitDir)
 		analyzer.Analyze(*_gitDir)
 	case _modeGenerate:
-		log.Fatal().Msgf("Mode not implemented yet: %s", _modeGenerate)
+		err := generator.Generate(generator.Option(*_option), *_force)
+		if err != nil {
+			log.Fatal().Err(err).Msgf("Failed to generate")
+		}
 	}
 }
 
@@ -61,5 +72,20 @@ func validateFlags() {
 	if _, err := os.Stat(filepath.Join(*_gitDir, ".git")); os.IsNotExist(err) {
 		log.Fatal().Msgf("dir exists but is not a git directory: %s", *_gitDir)
 		return
+	}
+	if *_force && *_mode != _modeGenerate {
+		log.Fatal().Msgf("force overwrite is only supported in %s mode", _modeGenerate)
+		return
+	}
+	if *_mode == _modeGenerate {
+		if _option == nil {
+			log.Fatal().Msgf("'for' not provided in in %s mode", _modeGenerate)
+			return
+		}
+		if !generator.IsValid(*_option) {
+			log.Fatal().Msgf("'for' is not valid, valid options are %s",
+				strings.Join(generator.GetOptions(), ","))
+			return
+		}
 	}
 }
