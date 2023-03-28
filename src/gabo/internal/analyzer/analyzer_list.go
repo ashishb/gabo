@@ -22,7 +22,8 @@ func isGoLinterImplemented(yamlData []string) bool {
 
 func isGoFormatterImplemented(yamlData []string) bool {
 	// This should be made more accurate over time
-	return contains(yamlData, "gofmt -l")
+	return contains(yamlData, "gofmt -l") ||
+		contains(yamlData, "gofumpt ")
 }
 
 func isDockerLinterImplemented(yamlData []string) bool {
