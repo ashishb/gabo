@@ -22,7 +22,6 @@ const (
 	_BuildAndroid Option = "build-android"
 	_BuildDocker  Option = "build-docker"
 	_BuildGo      Option = "build-go"
-	_BuildPython  Option = "build-python"
 
 	// _LintHtml     Option   = "lint-html"
 
@@ -45,7 +44,6 @@ var _options = []Option{
 	_BuildAndroid,
 	_BuildDocker,
 	_BuildGo,
-	_BuildPython,
 }
 
 func GetOptions() []string {
@@ -85,12 +83,12 @@ func (option Option) getOutputFileName(repoDir string) string {
 	case _LintYaml:
 		return getPath(repoDir, "lint-yaml.yaml")
 
+	case _BuildAndroid:
+		return getPath(repoDir, "build-android.yaml")
 	case _BuildDocker:
 		return getPath(repoDir, "build-docker.yaml")
 	case _BuildGo:
 		return getPath(repoDir, "build-go.yaml")
-	case _BuildPython:
-		return getPath(repoDir, "build-python.yaml")
 	default:
 		log.Panic().Msgf("unexpected case: %s ", option)
 		return ""
@@ -116,11 +114,11 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	case _LintYaml:
 		return &_lintYamlYaml, nil
 
+	case _BuildAndroid:
+		return generateBuildAndroidYaml(repoDir)
 	case _BuildDocker:
 		return generateBuildDockerYaml(repoDir)
 	case _BuildGo:
-		fallthrough
-	case _BuildPython:
 		fallthrough
 	default:
 		return nil, fmt.Errorf("unexpected case: %s ", option)
