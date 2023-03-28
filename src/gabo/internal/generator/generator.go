@@ -22,11 +22,9 @@ func (g Generator) Generate(option Option) error {
 	if g.force {
 		log.Warn().Msgf("Force overwrite is on, existing files will be over-written")
 	}
-	switch option {
-	case _LintDocker:
-		return writeOrWarn(option.getOutputFileName(g.dir), option.getYamlConfig(), g.force)
-	default:
-		log.Fatal().Msgf("Generate for '%s' not implemented", option)
+	str, err := option.getYamlConfig(g.dir)
+	if err != nil {
+		return err
 	}
-	return nil
+	return writeOrWarn(option.getOutputFileName(g.dir), *str, g.force)
 }

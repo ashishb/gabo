@@ -20,6 +20,8 @@ concurrency:
 
 jobs:
 
+  # Run it locally with https://github.com/nektos/act
+  # act -j lintGo
   lintGo:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -47,9 +49,3 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          # Directory containing go.mod file
-          working-directory: src/gabo
