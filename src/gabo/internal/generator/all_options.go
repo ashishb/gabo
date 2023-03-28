@@ -99,8 +99,6 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	switch option {
 	case _LintDocker:
 		return &_lintDockerYaml, nil
-	// TODO(ashishb): This does not handle monorepo case just yet
-	// fix that
 	case _LintGo:
 		return generateGoLintYaml(repoDir)
 	case _LintMarkdown:
