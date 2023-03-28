@@ -113,7 +113,7 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 		return &_lintYamlYaml, nil
 
 	case _BuildDocker:
-		fallthrough
+		return generateBuildDockerYaml(repoDir)
 	case _BuildGo:
 		fallthrough
 	case _BuildPython:
