@@ -13,19 +13,19 @@ import (
 )
 
 const (
-	_modeSuggest  = "suggest"
+	_modeAnalyze  = "analyze"
 	_modeGenerate = "generate"
 )
 
 var (
 	_verbose = flag.Bool("verbose", false, "Enable verbose logging")
 
-	_validModes = []string{_modeGenerate, _modeSuggest}
-	_mode       = flag.String("mode", _modeSuggest,
+	_validModes = []string{_modeGenerate, _modeAnalyze}
+	_mode       = flag.String("mode", _modeAnalyze,
 		fmt.Sprintf("Mode to operate in: %s", _validModes))
 	_gitDir = flag.String("dir", ".", "Path to root of git directory")
 
-	_option = flag.String("for", "", fmt.Sprintf("Generate GitHub Action for (options: %s)",
+	_option = flag.String("for", "", fmt.Sprintf("Generate GitHub Action (options: %s)",
 		strings.Join(generator.GetOptions(), ",")))
 	_force = flag.Bool("force", false,
 		fmt.Sprintf("Force overwrite existing files (in %s mode)", _modeGenerate))
@@ -40,7 +40,7 @@ func main() {
 	}
 	validateFlags()
 	switch *_mode {
-	case _modeSuggest:
+	case _modeAnalyze:
 		log.Info().Msgf("Analyzing dir '%s'", *_gitDir)
 		analyzer.Analyze(*_gitDir)
 	case _modeGenerate:
@@ -54,7 +54,7 @@ func main() {
 
 // This will normalize values of certain flags like _gitDir as well
 func validateFlags() {
-	if *_mode != _modeSuggest && *_mode != _modeGenerate {
+	if *_mode != _modeAnalyze && *_mode != _modeGenerate {
 		log.Fatal().Msgf("Invalid mode: %s, valid values are %s",
 			*_mode, _validModes)
 		return
