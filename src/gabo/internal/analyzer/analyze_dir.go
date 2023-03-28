@@ -65,9 +65,21 @@ func Analyze(rootDir string) {
 }
 
 func getYamlData(dir string) ([]string, error) {
-	matches, err := filepath.Glob(filepath.Join(dir, "**.y[a]ml"))
-	if os.IsNotExist(err) {
+	// Glob pattern "*.y?(a)ml" is not supported by Go
+	globPattern1 := filepath.Join(dir, "*.yaml")
+	globPattern2 := filepath.Join(dir, "*.yml")
+	log.Trace().Msgf("Glob patterns are %s and %s", globPattern1, globPattern2)
+	matches1, err1 := filepath.Glob(globPattern1)
+	matches2, err2 := filepath.Glob(globPattern2)
+	if os.IsNotExist(err1) && os.IsNotExist(err2) {
 		return nil, nil
+	}
+	matches := make([]string, 0)
+	if len(matches1) > 0 {
+		matches = append(matches, matches1...)
+	}
+	if len(matches2) > 0 {
+		matches = append(matches, matches2...)
 	}
 	data := make([]string, 0, len(matches))
 	for _, filePath := range matches {
@@ -79,6 +91,7 @@ func getYamlData(dir string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+		log.Trace().Msgf("File %s", filePath)
 		data = append(data, string(tmp))
 	}
 	return data, nil
