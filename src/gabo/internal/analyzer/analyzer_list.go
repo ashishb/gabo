@@ -1,6 +1,9 @@
 package analyzer
 
-import "strings"
+import (
+	"github.com/rs/zerolog/log"
+	"strings"
+)
 
 func isYamlLinterImplemented(yamlData []string) bool {
 	// This should be made more accurate over time
@@ -32,7 +35,18 @@ func isPythonLinterImplemented(yamlData []string) bool {
 	return contains(yamlData, "pylint")
 }
 
+func isShellScriptLinterImplemented(yamlData []string) bool {
+	// This should be made more accurate over time
+	return contains(yamlData, "ludeeus/action-shellcheck")
+}
+
+func isSolidityLinterImplemented(yamlData []string) bool {
+	// This should be made more accurate over time
+	return contains(yamlData, "contractshark/inject-solhint-ci")
+}
+
 func contains(yamlData []string, pattern string) bool {
+	log.Trace().Msgf("Looking for %s", pattern)
 	for _, data := range yamlData {
 		if strings.Contains(data, pattern) {
 			return true
