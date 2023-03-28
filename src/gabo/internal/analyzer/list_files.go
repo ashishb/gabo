@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func listAllFiles(result map[string]int, dir string) error {
+func getExtToFileCountMap(result map[string]int, dir string) error {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return err
@@ -18,7 +18,7 @@ func listAllFiles(result map[string]int, dir string) error {
 			continue
 		}
 		if entry.IsDir() {
-			err = listAllFiles(result, filepath.Join(dir, entry.Name()))
+			err = getExtToFileCountMap(result, filepath.Join(dir, entry.Name()))
 			if err != nil {
 				return err
 			}

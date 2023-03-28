@@ -5,8 +5,12 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 )
+
+type _Analyzer struct {
+	name    string
+	checker func(yamlStrings []string) bool
+}
 
 func Analyze(rootDir string) {
 	workflowsDir := filepath.Join(rootDir, ".github", "workflows")
@@ -15,41 +19,40 @@ func Analyze(rootDir string) {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
 	extToFreqMap := make(map[string]int)
-	err = listAllFiles(extToFreqMap, rootDir)
+	// For files like "Dockerfile", extension would be the full
+	// file name
+	err = getExtToFileCountMap(extToFreqMap, rootDir)
 	if err != nil {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
 	for k, v := range extToFreqMap {
 		log.Debug().Msgf("%s\t%d", k, v)
 	}
-	if extToFreqMap["yaml"] > 0 {
-		yamlLinter := isYamlLinterImplemented(yamlStrings)
-		if !yamlLinter {
-			log.Warn().Msgf("❌ YAML Linter is missing")
-		} else {
-			log.Info().Msgf("✅ YAML Linter is present")
-		}
+	// ext -> array of analyzer valid for that
+	tools := make(map[string][]_Analyzer)
+	tools["yaml"] = []_Analyzer{{name: "YAML Linter", checker: isYamlLinterImplemented}}
+	tools["md"] = []_Analyzer{{name: "Markdown Linter", checker: isMarkdownLinterImplemented}}
+	tools["go"] = []_Analyzer{
+		{name: "Go Linter", checker: isGoLinterImplemented},
+		{name: "Go Formatter", checker: isGoFormatterImplemented},
 	}
-	if extToFreqMap["md"] > 0 {
-		yamlLinter := isMarkdownLinterImplemented(yamlStrings)
-		if !yamlLinter {
-			log.Warn().Msgf("❌ Markdown Linter is missing")
-		} else {
-			log.Info().Msgf("✅ Markdown Linter is present")
-		}
+	tools["Dockerfile"] = []_Analyzer{
+		{name: "Docker Linter", checker: isDockerLinterImplemented},
 	}
-	if extToFreqMap["go"] > 0 {
-		goLinter := isGoLinterImplemented(yamlStrings)
-		if !goLinter {
-			log.Warn().Msgf("❌ Go Linter is missing")
-		} else {
-			log.Info().Msgf("✅ Go Linter is present")
+	tools["py"] = []_Analyzer{
+		{name: "Python Linter", checker: isPythonLinterImplemented},
+	}
+
+	for ext, analyzers := range tools {
+		if extToFreqMap[ext] <= 0 {
+			continue
 		}
-		goFormatter := isGoFormatterImplemented(yamlStrings)
-		if !goFormatter {
-			log.Warn().Msgf("❌ Go Formatter is missing")
-		} else {
-			log.Info().Msgf("✅ Go Formatter is present")
+		for _, analyzer := range analyzers {
+			if analyzer.checker(yamlStrings) {
+				log.Info().Msgf("✅ %s is present", analyzer.name)
+			} else {
+				log.Warn().Msgf("❌ %s is missing", analyzer.name)
+			}
 		}
 	}
 }
@@ -72,33 +75,4 @@ func getYamlData(dir string) ([]string, error) {
 		data = append(data, string(tmp))
 	}
 	return data, nil
-}
-
-func isYamlLinterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "uses: ibiqlik/action-yamllint")
-}
-
-func isMarkdownLinterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "mdl ")
-}
-
-func isGoLinterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "uses: golangci/golangci-lint-action")
-}
-
-func isGoFormatterImplemented(yamlData []string) bool {
-	// This should be made more accurate over time
-	return contains(yamlData, "gofmt -l")
-}
-
-func contains(yamlData []string, pattern string) bool {
-	for _, data := range yamlData {
-		if strings.Contains(data, pattern) {
-			return true
-		}
-	}
-	return false
 }
