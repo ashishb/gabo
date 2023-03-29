@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"github.com/ashishb/gabo/src/gabo/internal/analyzer"
@@ -29,16 +30,32 @@ var (
 		strings.Join(generator.GetOptions(), ",")))
 	_force = flag.Bool("force", false,
 		fmt.Sprintf("Force overwrite existing files (in %s mode)", _modeGenerate))
+	_version = flag.Bool("version", false, "Prints version of the binary")
 )
+
+//go:embed version.txt
+var _versionCode string
 
 func main() {
 	flag.Parse()
+	originalUsage := flag.Usage
+	flag.Usage = func() {
+		fmt.Printf("Generates GitHub Actions boilerplate\n")
+		originalUsage()
+	}
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	if *_verbose {
 		zerolog.SetGlobalLevel(zerolog.TraceLevel)
 	}
 	validateFlags()
+	if *_version {
+		fmt.Printf("gabo %s by Ashish Bhatia\nhttps://github.com/ashishb/gabo\n\n",
+			strings.TrimSpace(_versionCode))
+		flag.Usage()
+		return
+	}
+
 	switch *_mode {
 	case _modeAnalyze:
 		log.Info().Msgf("Analyzing dir '%s'", *_gitDir)
@@ -54,7 +71,7 @@ func main() {
 
 // This will normalize values of certain flags like _gitDir as well
 func validateFlags() {
-	if *_mode != _modeAnalyze && *_mode != _modeGenerate {
+	if *_mode != _modeAnalyze && *_mode != _modeGenerate && !*_version {
 		log.Fatal().Msgf("Invalid mode: %s, valid values are %s",
 			*_mode, _validModes)
 		return
