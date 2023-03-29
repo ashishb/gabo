@@ -9,7 +9,7 @@ build_prod:
 go_lint:
 	cd src/gabo && make lint
 
-lint: format go_lint docker_lint
+lint: format go_lint
 
 format:
 	cd src/gabo && make format
