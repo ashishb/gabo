@@ -55,6 +55,7 @@ func main() {
 		flag.Usage()
 		return
 	}
+	validateGitDir()
 
 	switch *_mode {
 	case _modeAnalyze:
@@ -76,21 +77,6 @@ func validateFlags() {
 			*_mode, _validModes)
 		return
 	}
-	if len(*_gitDir) == 0 {
-		log.Fatal().Msgf("dir cannot be empty")
-		return
-	}
-	if *_gitDir == "." {
-		path, err := os.Getwd()
-		if err != nil {
-			log.Fatal().Err(err).Msgf("Unable to get current dir")
-		}
-		_gitDir = &path
-	}
-	if _, err := os.Stat(filepath.Join(*_gitDir, ".git")); os.IsNotExist(err) {
-		log.Fatal().Msgf("dir exists but is not a git directory: %s", *_gitDir)
-		return
-	}
 	if *_force && *_mode != _modeGenerate {
 		log.Fatal().Msgf("force overwrite is only supported in %s mode", _modeGenerate)
 		return
@@ -106,4 +92,23 @@ func validateFlags() {
 			return
 		}
 	}
+}
+
+func validateGitDir() bool {
+	if len(*_gitDir) == 0 {
+		log.Fatal().Msgf("dir cannot be empty")
+		return false
+	}
+	if *_gitDir == "." {
+		path, err := os.Getwd()
+		if err != nil {
+			log.Fatal().Err(err).Msgf("Unable to get current dir")
+		}
+		_gitDir = &path
+	}
+	if _, err := os.Stat(filepath.Join(*_gitDir, ".git")); os.IsNotExist(err) {
+		log.Fatal().Msgf("dir exists but is not a git directory: %s", *_gitDir)
+		return false
+	}
+	return true
 }
