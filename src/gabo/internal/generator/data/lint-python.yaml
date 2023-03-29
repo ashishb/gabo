@@ -40,4 +40,5 @@ jobs:
           pip install -r requirements.txt
           pip install pylint
           # Add ignore rules here via --disable
-          python3 -m pylint .
+          # By default, only errors and warnings are enabled
+          python3 -m pylint --disable=R,C .
