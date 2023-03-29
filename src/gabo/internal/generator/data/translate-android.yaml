@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Translate strings.xml to supported languages
