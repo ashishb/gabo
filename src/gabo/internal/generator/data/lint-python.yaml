@@ -5,15 +5,13 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [main, master]
     paths:
-      - 'Makefile'
-      - '**/*.py'
-      - '.github/workflows/lint-python.yaml'
+      - "**/*.py"
+      - ".github/workflows/lint-python.yaml"
   pull_request:
     branches: [main, master]
     paths:
-      - 'Makefile'
-      - '**/*.py'
-      - '.github/workflows/lint-python.yaml'
+      - "**/*.py"
+      - ".github/workflows/lint-python.yaml"
 
 
 concurrency:
@@ -35,6 +33,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          # Options are pip, pipenv, or poetry
+          cache: "pip"
       - name: Lint
         run: |
           pip install -r requirements.txt
