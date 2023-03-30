@@ -33,3 +33,10 @@ $ gabo --help
   -verbose
       Enable verbose logging
 ```
+
+### Same usage
+
+```bash
+$ gabo --mode=generate --for=lint-docker
+Wrote file .github/workflows/lint-docker.yaml
+```
