@@ -34,7 +34,18 @@ $ gabo --help
       Enable verbose logging
 ```
 
-### Same usage
+### Sample usage - analyze a repository
+
+```bash
+
+# Analyze current directory (it should be the root of the repository)
+$ gabo
+
+# Analyze a different dir
+$ gabo --dir=~/src/repo1
+```
+
+### Sample usage - generate code
 
 ```bash
 $ gabo --mode=generate --for=lint-docker
