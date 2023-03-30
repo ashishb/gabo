@@ -10,6 +10,11 @@ import (
 type Option string
 
 const (
+	_BuildAndroid Option = "build-android"
+	_BuildDocker  Option = "build-docker"
+
+	_FormatGo Option = "format-go"
+
 	_LintAndroid     Option = "lint-android"
 	_LintDocker      Option = "lint-docker"
 	_LintGo          Option = "lint-go"
@@ -19,8 +24,6 @@ const (
 	_LintSolidity    Option = "lint-solidity"
 	_LintYaml        Option = "lint-yaml"
 
-	_BuildAndroid     Option = "build-android"
-	_BuildDocker      Option = "build-docker"
 	_TranslateAndroid Option = "translate-android"
 
 	// _LintHtml     Option   = "lint-html"
@@ -32,10 +35,10 @@ const (
 )
 
 var _options = []Option{
-	_TranslateAndroid,
-
 	_BuildAndroid,
 	_BuildDocker,
+
+	_FormatGo,
 
 	_LintAndroid,
 	_LintDocker,
@@ -45,6 +48,8 @@ var _options = []Option{
 	_LintShellScript,
 	_LintSolidity,
 	_LintYaml,
+
+	_TranslateAndroid,
 }
 
 func GetOptions() []string {
@@ -67,6 +72,12 @@ func IsValid(val string) bool {
 // repoDir is root dir of the repository
 func (option Option) getOutputFileName(repoDir string) string {
 	switch option {
+	case _BuildAndroid:
+		return getPath(repoDir, "build-android.yaml")
+	case _BuildDocker:
+		return getPath(repoDir, "build-docker.yaml")
+	case _FormatGo:
+		return getPath(repoDir, "format-go.yaml")
 	case _LintAndroid:
 		return getPath(repoDir, "lint-android.yaml")
 	case _LintDocker:
@@ -84,10 +95,6 @@ func (option Option) getOutputFileName(repoDir string) string {
 	case _LintYaml:
 		return getPath(repoDir, "lint-yaml.yaml")
 
-	case _BuildAndroid:
-		return getPath(repoDir, "build-android.yaml")
-	case _BuildDocker:
-		return getPath(repoDir, "build-docker.yaml")
 	case _TranslateAndroid:
 		return getPath(repoDir, "translate-android.yaml")
 	default:
@@ -98,6 +105,12 @@ func (option Option) getOutputFileName(repoDir string) string {
 
 func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	switch option {
+	case _BuildAndroid:
+		return generateBuildAndroidYaml(repoDir)
+	case _BuildDocker:
+		return generateBuildDockerYaml(repoDir)
+	case _FormatGo:
+		return &_formatGoYaml, nil
 	case _LintAndroid:
 		return &_lintAndroidYaml, nil
 	case _LintDocker:
@@ -115,10 +128,6 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	case _LintYaml:
 		return &_lintYamlYaml, nil
 
-	case _BuildAndroid:
-		return generateBuildAndroidYaml(repoDir)
-	case _BuildDocker:
-		return generateBuildDockerYaml(repoDir)
 	case _TranslateAndroid:
 		return &_translateAndroidYaml, nil
 
