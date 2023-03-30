@@ -15,8 +15,6 @@ Feel free to add more branches if you want to runs these checks when push/pull r
 ## Installation
 
 ```bash
-# Yeah, it is long
-# Does anyone know how can I shorten it?
 go install github.com/ashishb/gabo/src/gabo/cmd/gabo@latest
 ```
 
