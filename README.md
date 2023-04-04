@@ -22,22 +22,24 @@ go install github.com/ashishb/gabo/src/gabo/cmd/gabo@latest
 
 ```bash
 $ gabo --help
+Usage of gabo:
   -dir string
-      Path to root of git directory (default ".")
+    Path to root of git directory (default ".")
   -for string
-      Generate GitHub Action (options: translate-android,build-android,build-docker,lint-android,lint-docker,lint-go,lint-markdown,lint-python,lint-shell-script,lint-solidity,lint-yaml)
+    Generate GitHub Action (options: build-android,build-docker,lint-android,translate-android,format-go,lint-docker,lint-go,lint-markdown,lint-python,lint-shell-script,lint-solidity,lint-yaml,validate-openapi)
   -force
-      Force overwrite existing files (in generate mode)
+    Force overwrite existing files (in generate mode)
   -mode string
-      Mode to operate in: [generate analyze] (default "analyze")
+    Mode to operate in: [generate analyze] (default "analyze")
   -verbose
-      Enable verbose logging
+    Enable verbose logging
+  -version
+    Prints version of the binary
 ```
 
 ### Sample usage - analyze a repository
 
 ```bash
-
 # Analyze current directory (it should be the root of the repository)
 $ gabo
 
