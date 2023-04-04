@@ -1,0 +1,33 @@
+---
+name: Validate Open API schema
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [master, main]
+    paths:
+      - ".github/workflows/validate-openapi-schema.yaml"
+      - "**/openapi.json"
+      - "**/openapi.yaml"
+      - "**/openapi.yml"
+  pull_request:
+    branches: [master, main]
+    paths:
+      - ".github/workflows/validate-openapi-schema.yaml"
+      - "**/openapi.json"
+      - "**/openapi.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  # Run locally with "act -j validateOpenAPISchema"
+  validateOpenAPISchema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3

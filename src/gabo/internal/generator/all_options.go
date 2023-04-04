@@ -24,7 +24,8 @@ const (
 	LintSolidity    Option = "lint-solidity"
 	LintYaml        Option = "lint-yaml"
 
-	_TranslateAndroid Option = "translate-android"
+	_TranslateAndroid     Option = "translate-android"
+	ValidateOpenApiSchema Option = "validate-openapi"
 
 	// _LintHtml     Option   = "lint-html"
 
@@ -37,10 +38,11 @@ const (
 var _options = []Option{
 	_BuildAndroid,
 	_BuildDocker,
+	_LintAndroid,
+	_TranslateAndroid,
 
 	FormatGo,
 
-	_LintAndroid,
 	LintDocker,
 	LintGo,
 	LintMarkdown,
@@ -49,7 +51,7 @@ var _options = []Option{
 	LintSolidity,
 	LintYaml,
 
-	_TranslateAndroid,
+	ValidateOpenApiSchema,
 }
 
 func GetOptions() []string {
@@ -97,6 +99,8 @@ func (option Option) getOutputFileName(repoDir string) string {
 
 	case _TranslateAndroid:
 		return getPath(repoDir, "translate-android.yaml")
+	case ValidateOpenApiSchema:
+		return getPath(repoDir, "validate-openapi-schema.yaml")
 	default:
 		log.Panic().Msgf("unexpected case: %s ", option)
 		return ""
@@ -127,10 +131,10 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 		return &_lintSolidityYaml, nil
 	case LintYaml:
 		return &_lintYamlYaml, nil
-
 	case _TranslateAndroid:
 		return &_translateAndroidYaml, nil
-
+	case ValidateOpenApiSchema:
+		return generateOpenAPISchemaValidator(repoDir)
 	default:
 		return nil, fmt.Errorf("unexpected case: %s ", option)
 	}
