@@ -29,4 +29,6 @@ var (
 
 	//go:embed data/translate-android.yaml
 	_translateAndroidYaml string
+	//go:embed data/validate-openapi-schema.incomplete.yaml
+	_generateOpenAPISchemaValidatorTemplate string
 )

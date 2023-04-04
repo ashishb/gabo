@@ -17,6 +17,8 @@ const _goLangLintTask = `
           working-directory: "%s"
 `
 
+var errNoSuchDir = fmt.Errorf("no such dir")
+
 func generateGoLintYaml(repoDir string) (*string, error) {
 	dirs, err := getDirsContaining(repoDir, "go.mod")
 	if err != nil {
@@ -37,7 +39,7 @@ func getDirsContaining(dir string, fileName string) ([]string, error) {
 		return nil, err
 	}
 	if len(absPaths) == 0 {
-		return nil, fmt.Errorf("no dir containing %s", fileName)
+		return nil, errNoSuchDir
 	}
 	return getRelativePaths(dir, absPaths), nil
 }
