@@ -39,11 +39,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install pylint
-        run: pip install pylint
+      - name: Install pylint and flake8
+        run: |
+          pip install pylint
+          pip install flake8
 
-      - name: Lint
+      - name: Run pylint
         run: |
           # Add ignore rules here via --disable
           # By default, only errors and warnings are enabled
           python3 -m pylint --disable=R,C --recrusive=y .
+
+      - name: Run flake8
+        run: |
+          # Add ignore rules here via --ignore
+          flake8 src --count --ignore=E501,W504 --show-source --statistics
+          flake8 src --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
