@@ -105,6 +105,9 @@ func validateGitDir() bool {
 			log.Fatal().Err(err).Msgf("Unable to get current dir")
 		}
 		_gitDir = &path
+	} else if strings.HasPrefix(*_gitDir, "~/") {
+		tmp := strings.ReplaceAll(*_gitDir, "~", os.Getenv("HOME"))
+		_gitDir = &tmp
 	}
 	if _, err := os.Stat(filepath.Join(*_gitDir, ".git")); os.IsNotExist(err) {
 		log.Fatal().Msgf("dir exists but is not a git directory: %s", *_gitDir)
