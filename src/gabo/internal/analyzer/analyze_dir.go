@@ -1,15 +1,27 @@
 package analyzer
 
 import (
+	"fmt"
+	"github.com/ashishb/gabo/src/gabo/internal/generator"
 	"github.com/rs/zerolog/log"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type _Analyzer struct {
 	name    string
+	option  generator.Option
 	checker func(yamlStrings []string) bool
+}
+
+func (a _Analyzer) generateCommand(rootDir string) interface{} {
+	if strings.Contains(rootDir, " ") {
+		// escape whitespace in rootdir
+		rootDir = fmt.Sprintf("'%s'", rootDir)
+	}
+	return fmt.Sprintf("%s --mode=generate --for=%s --dir=%s", os.Args[0], a.option, rootDir)
 }
 
 func Analyze(rootDir string) {
@@ -30,24 +42,24 @@ func Analyze(rootDir string) {
 	}
 	// ext -> array of analyzer valid for that
 	tools := make(map[string][]_Analyzer)
-	tools["yaml"] = []_Analyzer{{name: "YAML Linter", checker: isYamlLinterImplemented}}
-	tools["md"] = []_Analyzer{{name: "Markdown Linter", checker: isMarkdownLinterImplemented}}
+	tools["yaml"] = []_Analyzer{{"YAML Linter", generator.LintYaml, isYamlLinterImplemented}}
+	tools["md"] = []_Analyzer{{"Markdown Linter", generator.LintMarkdown, isMarkdownLinterImplemented}}
 	tools["go"] = []_Analyzer{
-		{name: "Go Linter", checker: isGoLinterImplemented},
-		{name: "Go Formatter", checker: isGoFormatterImplemented},
+		{"Go Linter", generator.LintGo, isGoLinterImplemented},
+		{"Go Formatter", generator.FormatGo, isGoFormatterImplemented},
 	}
 	tools["Dockerfile"] = []_Analyzer{
-		{name: "Docker Linter", checker: isDockerLinterImplemented},
+		{"Docker Linter", generator.LintDocker, isDockerLinterImplemented},
 	}
 	tools["py"] = []_Analyzer{
-		{name: "Python Linter", checker: isPythonLinterImplemented},
+		{"Python Linter", generator.LintPython, isPythonLinterImplemented},
 	}
 	tools["sh"] = []_Analyzer{
-		{name: "Shellscript Linter", checker: isShellScriptLinterImplemented},
+		{"Shellscript Linter", generator.LintShellScript, isShellScriptLinterImplemented},
 	}
 	tools["bash"] = tools["sh"]
 	tools["sol"] = []_Analyzer{
-		{name: "Solidity Linter", checker: isSolidityLinterImplemented},
+		{"Solidity Linter", generator.LintSolidity, isSolidityLinterImplemented},
 	}
 
 	for ext, analyzers := range tools {
@@ -58,7 +70,8 @@ func Analyze(rootDir string) {
 			if analyzer.checker(yamlStrings) {
 				log.Info().Msgf("✅ %s is present", analyzer.name)
 			} else {
-				log.Warn().Msgf("❌ %s is missing", analyzer.name)
+				log.Warn().Msgf("❌ %s is missing, (\"%s\")",
+					analyzer.name, analyzer.generateCommand(rootDir))
 			}
 		}
 	}
