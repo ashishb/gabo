@@ -47,7 +47,7 @@ func GetOptions() []Option {
 			newGenerator(_lintDockerYaml), "lint-docker.yaml"},
 
 		_Option{"Go Formatter", "format-go", newFileMatcher("*.go"),
-			newPatternMatcher("gofmt -l", "gofumpt "),
+			newPatternMatcher("gofmt -l", "go fmt", "gofumpt "),
 			newGenerator(_formatGoYaml), "format-go.yaml"},
 		_Option{"Go Linter", "lint-go", newFileMatcher("*.go"),
 			newPatternMatcher("golangci-lint run "),
@@ -66,7 +66,7 @@ func GetOptions() []Option {
 			newGenerator(_lintMarkdownYaml), "lint-markdown.yaml"},
 		_Option{"OpenAPI Schema Validator", "validate-openapi-schema",
 			newFileMatcher(_openAPIFileList...),
-			newPatternMatcher("swagger-cli validate "),
+			newPatternMatcher("mpetrunic/swagger-cli-action"),
 			newGenerator2(generateOpenAPISchemaValidator),
 			"validate-openapi-schema.yaml"},
 		_Option{"Python Linter", "lint-python", newFileMatcher("*.py"),
