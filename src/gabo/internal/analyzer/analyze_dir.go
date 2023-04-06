@@ -51,6 +51,7 @@ func Analyze(rootDir string) {
 	suggestedCount := 0
 	for _, analyzer := range analyzers {
 		if !analyzer.isApplicable(rootDir) {
+			log.Trace().Msgf("Not applicable %s", analyzer.name)
 			continue
 		}
 		if analyzer.checker(yamlStrings) {

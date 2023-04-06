@@ -3,6 +3,7 @@ package generator
 import (
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"os"
 	"path/filepath"
 )
 
@@ -143,33 +144,33 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 func (option Option) IsApplicable(dir string) bool {
 	switch option {
 	case _BuildAndroid:
-		return hasFile("**/build.gradle", dir)
+		return hasFile(dir, "build.gradle")
 	case _BuildDocker:
-		return hasFile("Dockerfile", dir)
+		return hasFile(dir, "Dockerfile")
 	case FormatGo:
-		return hasFile("**/*.go", dir)
+		return hasFile(dir, "*.go")
 	case LintAndroid:
-		return hasFile("**/build.gradle", dir)
+		return hasFile(dir, "build.gradle")
 	case LintDocker:
-		return hasFile("Dockerfile", dir)
+		return hasFile(dir, "Dockerfile")
 	case LintGo:
-		return hasFile("**/*.go", dir)
+		return hasFile(dir, "*.go")
 	case LintMarkdown:
-		return hasFile("**/*.md", dir)
+		return hasFile(dir, "*.md")
 	case LintPython:
-		return hasFile("**/*.py", dir)
+		return hasFile(dir, "*.py")
 	case LintShellScript:
-		return hasFile("**/*.sh", dir) || hasFile("**/*.bash", dir)
+		return hasFile(dir, "*.sh") || hasFile(dir, "*.bash")
 	case LintSolidity:
-		return hasFile("**/*.sol", dir)
+		return hasFile(dir, "*.sol")
 	case LintYaml:
-		return hasFile("**/*.yaml", dir) || hasFile("**/*.yml", dir)
+		return hasFile(dir, "*.yaml") || hasFile(dir, "*.yml")
 	case TranslateAndroid:
-		return hasFile("**/build.gradle", dir)
+		return hasFile(dir, "build.gradle")
 	case ValidateOpenApiSchema:
-		return hasFile("openapi.json", dir) ||
-			hasFile("openapi.yaml", dir) ||
-			hasFile("openapi.yml", dir)
+		return hasFile(dir, "openapi.json") ||
+			hasFile(dir, "openapi.yaml") ||
+			hasFile(dir, "openapi.yml")
 	default:
 		log.Panic().Msgf("unexpected case: %s ", option)
 		return false
@@ -180,10 +181,32 @@ func getPath(rootDir string, fileName string) string {
 	return filepath.Join(rootDir, ".github", "workflows", fileName)
 }
 
-func hasFile(globPattern string, rootDir string) bool {
-	matches, err := filepath.Glob(rootDir + "/" + globPattern)
+// Note: Go does not support "**" glob pattern
+func hasFile(rootDir string, globPattern string) bool {
+	found := false
+	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			if info.Name() == ".git" {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		matched, err := filepath.Match(globPattern, info.Name())
+		if err != nil {
+			return err
+		}
+		if matched {
+			found = true
+			return filepath.SkipAll
+		}
+		return nil
+	})
 	if err != nil {
 		log.Panic().Err(err).Msgf("glob failed: '%s'", globPattern)
 	}
-	return len(matches) > 0
+	log.Trace().Msgf("hasFile(%s, %s) = %s", globPattern, rootDir, found)
+	return found
 }
