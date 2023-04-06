@@ -15,6 +15,16 @@ func isMarkdownLinterImplemented(yamlData []string) bool {
 	return contains(yamlData, "mdl ")
 }
 
+func isAndroidLinterImplemented(yamlData []string) bool {
+	// This should be made more accurate over time
+	return contains(yamlData, "gradlew lint")
+}
+
+func isAndroidAutoTranslatorImplemented(yamlData []string) bool {
+	// This should be made more accurate over time
+	return contains(yamlData, "ashishb/android-auto-translate")
+}
+
 func isGoLinterImplemented(yamlData []string) bool {
 	// This should be made more accurate over time
 	return contains(yamlData, "uses: golangci/golangci-lint-action")
@@ -24,6 +34,11 @@ func isGoFormatterImplemented(yamlData []string) bool {
 	// This should be made more accurate over time
 	return contains(yamlData, "gofmt -l") ||
 		contains(yamlData, "gofumpt ")
+}
+
+func isOpenApiSchemaValidatorImplemented(yamlData []string) bool {
+	// This should be made more accurate over time
+	return contains(yamlData, "mpetrunic/swagger-cli-action")
 }
 
 func isDockerLinterImplemented(yamlData []string) bool {

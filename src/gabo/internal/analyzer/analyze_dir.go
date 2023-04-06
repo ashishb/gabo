@@ -35,14 +35,17 @@ func Analyze(rootDir string) {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
 	analyzers := []_Analyzer{
-		{"YAML Linter", generator.LintYaml, isYamlLinterImplemented},
+		{"Android Linter", generator.LintAndroid, isAndroidLinterImplemented},
+		{"Android Auto-translate", generator.TranslateAndroid, isAndroidAutoTranslatorImplemented},
+		{"Docker Linter", generator.LintDocker, isDockerLinterImplemented},
 		{"Markdown Linter", generator.LintMarkdown, isMarkdownLinterImplemented},
 		{"Go Linter", generator.LintGo, isGoLinterImplemented},
 		{"Go Formatter", generator.FormatGo, isGoFormatterImplemented},
-		{"Docker Linter", generator.LintDocker, isDockerLinterImplemented},
+		{"OpenAPI Schema Validator", generator.ValidateOpenApiSchema, isOpenApiSchemaValidatorImplemented},
 		{"Python Linter", generator.LintPython, isPythonLinterImplemented},
 		{"Shellscript Linter", generator.LintShellScript, isShellScriptLinterImplemented},
 		{"Solidity Linter", generator.LintSolidity, isSolidityLinterImplemented},
+		{"YAML Linter", generator.LintYaml, isYamlLinterImplemented},
 	}
 
 	suggestedCount := 0

@@ -15,7 +15,7 @@ const (
 
 	FormatGo Option = "format-go"
 
-	_LintAndroid    Option = "lint-android"
+	LintAndroid     Option = "lint-android"
 	LintDocker      Option = "lint-docker"
 	LintGo          Option = "lint-go"
 	LintMarkdown    Option = "lint-markdown"
@@ -24,7 +24,7 @@ const (
 	LintSolidity    Option = "lint-solidity"
 	LintYaml        Option = "lint-yaml"
 
-	_TranslateAndroid     Option = "translate-android"
+	TranslateAndroid      Option = "translate-android"
 	ValidateOpenApiSchema Option = "validate-openapi"
 
 	// _LintHtml     Option   = "lint-html"
@@ -38,11 +38,10 @@ const (
 var _options = []Option{
 	_BuildAndroid,
 	_BuildDocker,
-	_LintAndroid,
-	_TranslateAndroid,
 
 	FormatGo,
 
+	LintAndroid,
 	LintDocker,
 	LintGo,
 	LintMarkdown,
@@ -51,6 +50,7 @@ var _options = []Option{
 	LintSolidity,
 	LintYaml,
 
+	TranslateAndroid,
 	ValidateOpenApiSchema,
 }
 
@@ -80,7 +80,7 @@ func (option Option) getOutputFileName(repoDir string) string {
 		return getPath(repoDir, "build-docker.yaml")
 	case FormatGo:
 		return getPath(repoDir, "format-go.yaml")
-	case _LintAndroid:
+	case LintAndroid:
 		return getPath(repoDir, "lint-android.yaml")
 	case LintDocker:
 		return getPath(repoDir, "lint-docker.yaml")
@@ -97,7 +97,7 @@ func (option Option) getOutputFileName(repoDir string) string {
 	case LintYaml:
 		return getPath(repoDir, "lint-yaml.yaml")
 
-	case _TranslateAndroid:
+	case TranslateAndroid:
 		return getPath(repoDir, "translate-android.yaml")
 	case ValidateOpenApiSchema:
 		return getPath(repoDir, "validate-openapi-schema.yaml")
@@ -115,7 +115,7 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 		return generateBuildDockerYaml(repoDir)
 	case FormatGo:
 		return &_formatGoYaml, nil
-	case _LintAndroid:
+	case LintAndroid:
 		return &_lintAndroidYaml, nil
 	case LintDocker:
 		return &_lintDockerYaml, nil
@@ -131,7 +131,7 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 		return &_lintSolidityYaml, nil
 	case LintYaml:
 		return &_lintYamlYaml, nil
-	case _TranslateAndroid:
+	case TranslateAndroid:
 		return &_translateAndroidYaml, nil
 	case ValidateOpenApiSchema:
 		return generateOpenAPISchemaValidator(repoDir)
@@ -148,7 +148,7 @@ func (option Option) IsApplicable(dir string) bool {
 		return hasFile("Dockerfile", dir)
 	case FormatGo:
 		return hasFile("**/*.go", dir)
-	case _LintAndroid:
+	case LintAndroid:
 		return hasFile("**/build.gradle", dir)
 	case LintDocker:
 		return hasFile("Dockerfile", dir)
@@ -164,7 +164,7 @@ func (option Option) IsApplicable(dir string) bool {
 		return hasFile("**/*.sol", dir)
 	case LintYaml:
 		return hasFile("**/*.yaml", dir) || hasFile("**/*.yml", dir)
-	case _TranslateAndroid:
+	case TranslateAndroid:
 		return hasFile("**/build.gradle", dir)
 	case ValidateOpenApiSchema:
 		return hasFile("openapi.json", dir) ||
