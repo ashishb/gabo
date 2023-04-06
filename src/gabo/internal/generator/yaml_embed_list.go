@@ -11,6 +11,8 @@ var (
 	_lintDockerYaml string
 	//go:embed data/lint-go-incomplete.yaml
 	_lintGoTemplate string
+	//go:embed data/lint-html.yaml
+	_lintHtmlYaml string
 	//go:embed data/lint-markdown.yaml
 	_lintMarkdownYaml string
 	//go:embed data/lint-python.yaml

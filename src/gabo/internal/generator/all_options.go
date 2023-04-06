@@ -18,8 +18,7 @@ type Option interface {
 	GetOutputFileName(repoDir string) string
 }
 
-func GetOptions2() []Option {
-	// _LintHtml     Option   = "lint-html"
+func GetOptions() []Option {
 	// _BuildGo      Option = "build-go"
 	// _TestGo Option = "test-go"
 	// _TestPython Option = "test-python"
@@ -53,6 +52,10 @@ func GetOptions2() []Option {
 		_Option{"Go Linter", "lint-go", newFileMatcher("*.go"),
 			newPatternMatcher("golangci-lint run "),
 			newGenerator2(generateGoLintYaml), "lint-go.yaml"},
+
+		_Option{"HTML Linter", "lint-html", newFileMatcher("*.html", "*.htm"),
+			newPatternMatcher("htmlhint "), newGenerator(_lintHtmlYaml),
+			"lint-html.yaml"},
 
 		_Option{"Markdown Linter", "lint-markdown", newFileMatcher("*.md"),
 			newPatternMatcher("mdl "),
@@ -149,7 +152,7 @@ func newGenerator2(f func(repoDir string) (*string, error)) _Generator {
 
 func GetOptionFlags() []string {
 	result := make([]string, 0)
-	for _, option := range GetOptions2() {
+	for _, option := range GetOptions() {
 		result = append(result, option.FlagName())
 	}
 	return result

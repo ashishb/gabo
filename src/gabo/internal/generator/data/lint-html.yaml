@@ -1,0 +1,38 @@
+---
+name: Lint HTML
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - '**.htm'
+      - '*.htm'
+      - '.github/workflows/lint-html.yaml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - '**.htm'
+      - '*.htm'
+      - '.github/workflows/lint-html.yaml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  # Run this locally with act - https://github.com/nektos/act
+  # act -j lintHTML
+  lintHTML:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install HTMLHint (Linter)
+        run: npm install htmlhint -g
+
+      - name: Run Linter
+        run: htmlhint .
