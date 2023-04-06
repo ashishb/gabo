@@ -10,25 +10,12 @@ import (
 	"strings"
 )
 
-type _Analyzer struct {
-	option  generator.Option
-	checker func(yamlStrings []string) bool
-}
-
-func (a _Analyzer) generateCommand(rootDir string) interface{} {
+func generateCommand(flagName string, rootDir string) string {
 	if strings.Contains(rootDir, " ") {
 		// escape whitespace in rootdir
 		rootDir = fmt.Sprintf("'%s'", rootDir)
 	}
-	return fmt.Sprintf("%s --mode=generate --for=%s --dir=%s", os.Args[0], a.option, rootDir)
-}
-
-func (a _Analyzer) isApplicable(rootDir string) bool {
-	return a.option.IsApplicable(rootDir)
-}
-
-func (a _Analyzer) Name() string {
-	return a.option.Name()
+	return fmt.Sprintf("%s --mode=generate --for=%s --dir=%s", os.Args[0], flagName, rootDir)
 }
 
 func Analyze(rootDir string) {
@@ -37,31 +24,18 @@ func Analyze(rootDir string) {
 	if err != nil {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
-	analyzers := []_Analyzer{
-		{generator.LintAndroid, isAndroidLinterImplemented},
-		{generator.TranslateAndroid, isAndroidAutoTranslatorImplemented},
-		{generator.LintDocker, isDockerLinterImplemented},
-		{generator.LintMarkdown, isMarkdownLinterImplemented},
-		{generator.LintGo, isGoLinterImplemented},
-		{generator.FormatGo, isGoFormatterImplemented},
-		{generator.ValidateOpenApiSchema, isOpenApiSchemaValidatorImplemented},
-		{generator.LintPython, isPythonLinterImplemented},
-		{generator.LintShellScript, isShellScriptLinterImplemented},
-		{generator.LintSolidity, isSolidityLinterImplemented},
-		{generator.LintYaml, isYamlLinterImplemented},
-	}
 
 	suggestedCount := 0
-	for _, analyzer := range analyzers {
-		if !analyzer.isApplicable(rootDir) {
+	for _, analyzer := range generator.GetOptions2() {
+		if !analyzer.IsApplicable(rootDir) {
 			log.Trace().Msgf("Not applicable %s", analyzer.Name())
 			continue
 		}
-		if analyzer.checker(yamlStrings) {
+		if analyzer.IsImplemented(yamlStrings) {
 			log.Info().Msgf("✅ %s is present", analyzer.Name())
 		} else {
 			log.Warn().Msgf("❌ %s is missing, (\"%s\")",
-				analyzer.Name(), analyzer.generateCommand(rootDir))
+				analyzer.Name(), generateCommand(analyzer.Name(), rootDir))
 			suggestedCount = 0
 		}
 	}

@@ -15,7 +15,7 @@ func generateBuildAndroidYaml(repoDir string) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
-	str := _buildAndroidYaml
+	str := _buildAndroidTemplate
 	for _, dir := range dirs {
 		str += fmt.Sprintf(_buildAndroidTask, dir, dir)
 	}

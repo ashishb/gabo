@@ -1,214 +1,200 @@
 package generator
 
 import (
-	"fmt"
 	"github.com/rs/zerolog/log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-// Option represents a generation option
-type Option string
+type Option interface {
+	// E.g. "Markdown Linter"
+	Name() string
+	// E.g. lint-markdown
+	FlagName() string
+	IsApplicable(repoDir string) bool
+	IsImplemented(yamlData []string) bool
+	GetYamlConfig(repoDir string) (*string, error)
+	GetOutputFileName(repoDir string) string
+}
 
-const (
-	_BuildAndroid Option = "build-android"
-	_BuildDocker  Option = "build-docker"
-
-	FormatGo Option = "format-go"
-
-	LintAndroid     Option = "lint-android"
-	LintDocker      Option = "lint-docker"
-	LintGo          Option = "lint-go"
-	LintMarkdown    Option = "lint-markdown"
-	LintPython      Option = "lint-python"
-	LintShellScript Option = "lint-shell-script"
-	LintSolidity    Option = "lint-solidity"
-	LintYaml        Option = "lint-yaml"
-
-	TranslateAndroid      Option = "translate-android"
-	ValidateOpenApiSchema Option = "validate-openapi"
-
+func GetOptions2() []Option {
 	// _LintHtml     Option   = "lint-html"
-
-	// TODO(ashishb): Enable these
 	// _BuildGo      Option = "build-go"
 	// _TestGo Option = "test-go"
 	// _TestPython Option = "test-python"
-)
 
-var _options = []Option{
-	_BuildAndroid,
-	_BuildDocker,
+	return []Option{
+		_Option{"Android Builder", "build-android",
+			newFileMatcher("AndroidManifest.xml"),
+			newPatternMatcher("gradlew build"),
+			newGenerator2(generateBuildAndroidYaml), "build-android.yaml"},
+		_Option{"Android Linter", "lint-android",
+			newFileMatcher("AndroidManifest.xml"),
+			newPatternMatcher("gradlew lint"),
+			newGenerator(_lintAndroidYaml), "lint-android.yaml"},
+		_Option{"Android Auto Translator", "translate-android",
+			newFileMatcher("AndroidManifest.xml"),
+			newPatternMatcher("ashishb/android-auto-translate"),
+			newGenerator(_translateAndroidYaml),
+			"translate-android.yaml"},
 
-	FormatGo,
+		_Option{"Docker Builder", "build-docker",
+			newFileMatcher("Dockerfile"),
+			newPatternMatcher("docker build "),
+			newGenerator2(generateBuildDockerYaml), "build-docker.yaml"},
+		_Option{"Docker Linter", "lint-docker", newFileMatcher("Dockerfile"),
+			newPatternMatcher("hadolint "),
+			newGenerator(_lintDockerYaml), "lint-docker.yaml"},
 
-	LintAndroid,
-	LintDocker,
-	LintGo,
-	LintMarkdown,
-	LintPython,
-	LintShellScript,
-	LintSolidity,
-	LintYaml,
+		_Option{"Go Formatter", "format-go", newFileMatcher("*.go"),
+			newPatternMatcher("gofmt -l", "gofumpt "),
+			newGenerator(_formatGoYaml), "format-go.yaml"},
+		_Option{"Go Linter", "lint-go", newFileMatcher("*.go"),
+			newPatternMatcher("golangci-lint run "),
+			newGenerator2(generateGoLintYaml), "lint-go.yaml"},
 
-	TranslateAndroid,
-	ValidateOpenApiSchema,
-}
-
-func GetOptions() []string {
-	result := make([]string, 0, len(_options))
-	for _, option := range _options {
-		result = append(result, string(option))
+		_Option{"Markdown Linter", "lint-markdown", newFileMatcher("*.md"),
+			newPatternMatcher("mdl "),
+			newGenerator(_lintMarkdownYaml), "lint-markdown.yaml"},
+		_Option{"OpenAPI Schema Validator", "validate-openapi-schema",
+			newFileMatcher("openapi.json", "openapi.yaml", "openapi.yml"),
+			newPatternMatcher("swagger-cli validate "),
+			newGenerator2(generateOpenAPISchemaValidator),
+			"validate-openapi-schema.yaml"},
+		_Option{"Python Linter", "lint-python", newFileMatcher("*.py"),
+			newPatternMatcher("pylint "),
+			newGenerator(_lintPythonYaml), "lint-python.yaml"},
+		_Option{"Shell Script Linter", "lint-shell-script", newFileMatcher("*.sh", "*.bash"),
+			newPatternMatcher("shellcheck "),
+			newGenerator(_lintShellScriptYaml), "lint-shell-script.yaml"},
+		_Option{"Solidity Linter", "lint-solidity", newFileMatcher("*.sol"),
+			newPatternMatcher("solhint "),
+			newGenerator(_lintSolidityYaml), "lint-solidity.yaml"},
+		_Option{"YAML Linter", "lint-yaml", newFileMatcher("*.yml", "*.yaml"),
+			newPatternMatcher("yamllint "),
+			newGenerator(_lintYamlYaml), "lint-yaml.yaml"},
 	}
-	return result
 }
 
-func IsValid(val string) bool {
-	for _, option := range _options {
-		if val == string(option) {
+type _FileMatcher interface {
+	Matches(repoDir string) bool
+}
+
+type _FileMatcherImpl struct {
+	patterns []string
+}
+
+func (f _FileMatcherImpl) Matches(rootDir string) bool {
+	for _, pattern := range f.patterns {
+		if hasFile(rootDir, pattern) {
 			return true
 		}
 	}
 	return false
 }
 
-// repoDir is root dir of the repository
-func (option Option) getOutputFileName(repoDir string) string {
-	switch option {
-	case _BuildAndroid:
-		return getPath(repoDir, "build-android.yaml")
-	case _BuildDocker:
-		return getPath(repoDir, "build-docker.yaml")
-	case FormatGo:
-		return getPath(repoDir, "format-go.yaml")
-	case LintAndroid:
-		return getPath(repoDir, "lint-android.yaml")
-	case LintDocker:
-		return getPath(repoDir, "lint-docker.yaml")
-	case LintGo:
-		return getPath(repoDir, "lint-go.yaml")
-	case LintMarkdown:
-		return getPath(repoDir, "lint-markdown.yaml")
-	case LintPython:
-		return getPath(repoDir, "lint-python.yaml")
-	case LintShellScript:
-		return getPath(repoDir, "lint-shell-script.yaml")
-	case LintSolidity:
-		return getPath(repoDir, "lint-solidity.yaml")
-	case LintYaml:
-		return getPath(repoDir, "lint-yaml.yaml")
-
-	case TranslateAndroid:
-		return getPath(repoDir, "translate-android.yaml")
-	case ValidateOpenApiSchema:
-		return getPath(repoDir, "validate-openapi-schema.yaml")
-	default:
-		log.Panic().Msgf("unexpected case: %s ", option)
-		return ""
-	}
+func newFileMatcher(patterns ...string) _FileMatcher {
+	return _FileMatcherImpl{patterns}
 }
 
-func (option Option) getYamlConfig(repoDir string) (*string, error) {
-	switch option {
-	case _BuildAndroid:
-		return generateBuildAndroidYaml(repoDir)
-	case _BuildDocker:
-		return generateBuildDockerYaml(repoDir)
-	case FormatGo:
-		return &_formatGoYaml, nil
-	case LintAndroid:
-		return &_lintAndroidYaml, nil
-	case LintDocker:
-		return &_lintDockerYaml, nil
-	case LintGo:
-		return generateGoLintYaml(repoDir)
-	case LintMarkdown:
-		return &_lintMarkdownYaml, nil
-	case LintPython:
-		return &_lintPythonYaml, nil
-	case LintShellScript:
-		return &_lintShellScriptYaml, nil
-	case LintSolidity:
-		return &_lintSolidityYaml, nil
-	case LintYaml:
-		return &_lintYamlYaml, nil
-	case TranslateAndroid:
-		return &_translateAndroidYaml, nil
-	case ValidateOpenApiSchema:
-		return generateOpenAPISchemaValidator(repoDir)
-	default:
-		return nil, fmt.Errorf("unexpected case: %s ", option)
-	}
+type _PatternMatcher interface {
+	Matches(yamlData []string) bool
 }
 
-func (option Option) IsApplicable(dir string) bool {
-	switch option {
-	case _BuildAndroid:
-		return hasFile(dir, "AndroidManifest.xml")
-	case _BuildDocker:
-		return hasFile(dir, "Dockerfile")
-	case FormatGo:
-		return hasFile(dir, "*.go")
-	case LintAndroid:
-		return hasFile(dir, "AndroidManifest.xml")
-	case LintDocker:
-		return hasFile(dir, "Dockerfile")
-	case LintGo:
-		return hasFile(dir, "*.go")
-	case LintMarkdown:
-		return hasFile(dir, "*.md")
-	case LintPython:
-		return hasFile(dir, "*.py")
-	case LintShellScript:
-		return hasFile(dir, "*.sh") || hasFile(dir, "*.bash")
-	case LintSolidity:
-		return hasFile(dir, "*.sol")
-	case LintYaml:
-		return hasFile(dir, "*.yaml") || hasFile(dir, "*.yml")
-	case TranslateAndroid:
-		return hasFile(dir, "build.gradle")
-	case ValidateOpenApiSchema:
-		return hasFile(dir, "openapi.json") ||
-			hasFile(dir, "openapi.yaml") ||
-			hasFile(dir, "openapi.yml")
-	default:
-		log.Panic().Msgf("unexpected case: %s ", option)
-		return false
-	}
+type _PatternMatcherImpl struct {
+	patterns []string
 }
 
-func (option Option) Name() string {
-	switch option {
-	case _BuildAndroid:
-		return "Build Android"
-	case _BuildDocker:
-		return "Build Docker"
-	case FormatGo:
-		return "Go Formatter"
-	case LintAndroid:
-		return "Android Linter"
-	case LintDocker:
-		return "Docker Linter"
-	case LintGo:
-		return "Go Linter"
-	case LintMarkdown:
-		return "Markdown Linter"
-	case LintPython:
-		return "Python Linter"
-	case LintShellScript:
-		return "Shell Script Linter"
-	case LintSolidity:
-		return "Solidity Linter"
-	case LintYaml:
-		return "YAML Linter"
-	case TranslateAndroid:
-		return "Android Auto-translator"
-	case ValidateOpenApiSchema:
-		return "OpenAPI Schema Validator"
-	default:
-		log.Panic().Msgf("unexpected case: %s ", option)
-		return ""
+func (f _PatternMatcherImpl) Matches(yamlData []string) bool {
+	for _, pattern := range f.patterns {
+		if contains(yamlData, pattern) {
+			return true
+		}
 	}
+	return false
+}
+
+func newPatternMatcher(patterns ...string) _PatternMatcher {
+	return _PatternMatcherImpl{patterns}
+}
+
+type _Generator interface {
+	Generate(repoDir string) (*string, error)
+}
+
+type _GeneratorStringImpl struct {
+	yamlStr string
+}
+
+func (g _GeneratorStringImpl) Generate(_ string) (*string, error) {
+	return &g.yamlStr, nil
+}
+
+type _GeneratorFuncImpl struct {
+	f func(repoDir string) (*string, error)
+}
+
+func (g _GeneratorFuncImpl) Generate(repoDir string) (*string, error) {
+	return g.f(repoDir)
+}
+
+func newGenerator(yamlStr string) _Generator {
+	return _GeneratorStringImpl{yamlStr}
+}
+
+func newGenerator2(f func(repoDir string) (*string, error)) _Generator {
+	return _GeneratorFuncImpl{f: f}
+}
+
+func GetOptionFlags() []string {
+	result := make([]string, 0)
+	for _, option := range GetOptions2() {
+		result = append(result, option.FlagName())
+	}
+	return result
+}
+
+func IsValid(val string) bool {
+	for _, option := range GetOptionFlags() {
+		if val == option {
+			return true
+		}
+	}
+	return false
+}
+
+type _Option struct {
+	name                        string
+	flagName                    string
+	filePatternToCheck          _FileMatcher
+	isImplementedPatternMatcher _PatternMatcher
+	yamlConfigGenerator         _Generator
+	outputFileName              string
+}
+
+func (o _Option) Name() string {
+	return o.name
+}
+
+func (o _Option) FlagName() string {
+	return o.flagName
+}
+
+func (o _Option) IsApplicable(repoDir string) bool {
+	return o.filePatternToCheck.Matches(repoDir)
+}
+
+func (o _Option) IsImplemented(yamlData []string) bool {
+	return o.isImplementedPatternMatcher.Matches(yamlData)
+}
+
+func (o _Option) GetYamlConfig(repoDir string) (*string, error) {
+	return o.yamlConfigGenerator.Generate(repoDir)
+}
+
+func (o _Option) GetOutputFileName(repoDir string) string {
+	return getPath(repoDir, o.outputFileName)
 }
 
 func getPath(rootDir string, fileName string) string {
@@ -241,6 +227,16 @@ func hasFile(rootDir string, globPattern string) bool {
 	if err != nil {
 		log.Panic().Err(err).Msgf("glob failed: '%s'", globPattern)
 	}
-	log.Trace().Msgf("hasFile(%s, %s) = %s", globPattern, rootDir, found)
+	log.Trace().Msgf("hasFile(%s, %s) = %v", globPattern, rootDir, found)
 	return found
+}
+
+func contains(yamlData []string, pattern string) bool {
+	log.Trace().Msgf("Looking for %s", pattern)
+	for _, data := range yamlData {
+		if strings.Contains(data, pattern) {
+			return true
+		}
+	}
+	return false
 }

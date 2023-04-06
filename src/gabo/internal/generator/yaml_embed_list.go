@@ -10,7 +10,7 @@ var (
 	//go:embed data/lint-docker.yaml
 	_lintDockerYaml string
 	//go:embed data/lint-go-incomplete.yaml
-	_lintGoYaml string
+	_lintGoTemplate string
 	//go:embed data/lint-markdown.yaml
 	_lintMarkdownYaml string
 	//go:embed data/lint-python.yaml
@@ -23,9 +23,9 @@ var (
 	_lintYamlYaml string
 
 	//go:embed data/build-android-incomplete.yaml
-	_buildAndroidYaml string
+	_buildAndroidTemplate string
 	//go:embed data/build-docker-incomplete.yaml
-	_buildDockerYaml string
+	_buildDockerTemplate string
 
 	//go:embed data/translate-android.yaml
 	_translateAndroidYaml string

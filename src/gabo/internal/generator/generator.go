@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"fmt"
 	"github.com/rs/zerolog/log"
 )
 
@@ -18,13 +19,26 @@ func NewGenerator(dir string, force bool) Generator {
 	}
 }
 
-func (g Generator) Generate(option Option) error {
+func (g Generator) Generate(option string) error {
 	if g.force {
 		log.Warn().Msgf("Force overwrite is on, existing files will be over-written")
 	}
-	str, err := option.getYamlConfig(g.dir)
+	option2, err := getOptionForFlag(option)
 	if err != nil {
 		return err
 	}
-	return writeOrWarn(option.getOutputFileName(g.dir), *str, g.force)
+	str, err := (*option2).GetYamlConfig(g.dir)
+	if err != nil {
+		return err
+	}
+	return writeOrWarn((*option2).GetOutputFileName(g.dir), *str, g.force)
+}
+
+func getOptionForFlag(target string) (*Option, error) {
+	for _, option := range GetOptions2() {
+		if option.FlagName() == target {
+			return &option, nil
+		}
+	}
+	return nil, fmt.Errorf("invalid option: %s", target)
 }

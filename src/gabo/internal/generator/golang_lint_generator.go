@@ -24,7 +24,7 @@ func generateGoLintYaml(repoDir string) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
-	str := _lintGoYaml
+	str := _lintGoTemplate
 	for _, dir := range dirs {
 		str += fmt.Sprintf(_goLangLintTask, dir, dir)
 	}

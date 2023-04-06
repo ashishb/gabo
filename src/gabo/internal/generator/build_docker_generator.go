@@ -14,7 +14,7 @@ func generateBuildDockerYaml(repoDir string) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
-	str := _buildDockerYaml
+	str := _buildDockerTemplate
 	for _, dir := range dirs {
 		str += fmt.Sprintf(_buildDockerTask, dir, dir)
 	}
