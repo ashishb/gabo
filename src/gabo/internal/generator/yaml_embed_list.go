@@ -3,6 +3,8 @@ package generator
 import _ "embed"
 
 var (
+	//go:embed data/check-goreleaser-config.yaml
+	_checkGoReleaserConfigTemplate string
 	//go:embed data/format-go.yaml
 	_formatGoYaml string
 	//go:embed data/lint-android.yaml
