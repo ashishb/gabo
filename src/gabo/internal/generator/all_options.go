@@ -140,6 +140,50 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 	}
 }
 
+func (option Option) IsApplicable(dir string) bool {
+	switch option {
+	case _BuildAndroid:
+		return hasFile("**/build.gradle", dir)
+	case _BuildDocker:
+		return hasFile("Dockerfile", dir)
+	case FormatGo:
+		return hasFile("**/*.go", dir)
+	case _LintAndroid:
+		return hasFile("**/build.gradle", dir)
+	case LintDocker:
+		return hasFile("Dockerfile", dir)
+	case LintGo:
+		return hasFile("**/*.go", dir)
+	case LintMarkdown:
+		return hasFile("**/*.md", dir)
+	case LintPython:
+		return hasFile("**/*.py", dir)
+	case LintShellScript:
+		return hasFile("**/*.sh", dir) || hasFile("**/*.bash", dir)
+	case LintSolidity:
+		return hasFile("**/*.sol", dir)
+	case LintYaml:
+		return hasFile("**/*.yaml", dir) || hasFile("**/*.yml", dir)
+	case _TranslateAndroid:
+		return hasFile("**/build.gradle", dir)
+	case ValidateOpenApiSchema:
+		return hasFile("openapi.json", dir) ||
+			hasFile("openapi.yaml", dir) ||
+			hasFile("openapi.yml", dir)
+	default:
+		log.Panic().Msgf("unexpected case: %s ", option)
+		return false
+	}
+}
+
 func getPath(rootDir string, fileName string) string {
 	return filepath.Join(rootDir, ".github", "workflows", fileName)
+}
+
+func hasFile(globPattern string, rootDir string) bool {
+	matches, err := filepath.Glob(rootDir + "/" + globPattern)
+	if err != nil {
+		log.Panic().Err(err).Msgf("glob failed: '%s'", globPattern)
+	}
+	return len(matches) > 0
 }

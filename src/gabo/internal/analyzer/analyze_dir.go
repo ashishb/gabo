@@ -24,56 +24,42 @@ func (a _Analyzer) generateCommand(rootDir string) interface{} {
 	return fmt.Sprintf("%s --mode=generate --for=%s --dir=%s", os.Args[0], a.option, rootDir)
 }
 
+func (a _Analyzer) isApplicable(rootDir string) bool {
+	return a.option.IsApplicable(rootDir)
+}
+
 func Analyze(rootDir string) {
 	workflowsDir := filepath.Join(rootDir, ".github", "workflows")
 	yamlStrings, err := getYamlData(workflowsDir)
 	if err != nil {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
-	extToFreqMap := make(map[string]int)
-	// For files like "Dockerfile", extension would be the full
-	// file name
-	err = getExtToFileCountMap(extToFreqMap, rootDir)
-	if err != nil {
-		log.Fatal().Msgf("Error: %s", err.Error())
-	}
-	for k, v := range extToFreqMap {
-		log.Debug().Msgf("%s\t%d", k, v)
-	}
-	// ext -> array of analyzer valid for that
-	tools := make(map[string][]_Analyzer)
-	tools["yaml"] = []_Analyzer{{"YAML Linter", generator.LintYaml, isYamlLinterImplemented}}
-	tools["md"] = []_Analyzer{{"Markdown Linter", generator.LintMarkdown, isMarkdownLinterImplemented}}
-	tools["go"] = []_Analyzer{
+	analyzers := []_Analyzer{
+		{"YAML Linter", generator.LintYaml, isYamlLinterImplemented},
+		{"Markdown Linter", generator.LintMarkdown, isMarkdownLinterImplemented},
 		{"Go Linter", generator.LintGo, isGoLinterImplemented},
 		{"Go Formatter", generator.FormatGo, isGoFormatterImplemented},
-	}
-	tools["Dockerfile"] = []_Analyzer{
 		{"Docker Linter", generator.LintDocker, isDockerLinterImplemented},
-	}
-	tools["py"] = []_Analyzer{
 		{"Python Linter", generator.LintPython, isPythonLinterImplemented},
-	}
-	tools["sh"] = []_Analyzer{
 		{"Shellscript Linter", generator.LintShellScript, isShellScriptLinterImplemented},
-	}
-	tools["bash"] = tools["sh"]
-	tools["sol"] = []_Analyzer{
 		{"Solidity Linter", generator.LintSolidity, isSolidityLinterImplemented},
 	}
 
-	for ext, analyzers := range tools {
-		if extToFreqMap[ext] <= 0 {
+	suggestedCount := 0
+	for _, analyzer := range analyzers {
+		if !analyzer.isApplicable(rootDir) {
 			continue
 		}
-		for _, analyzer := range analyzers {
-			if analyzer.checker(yamlStrings) {
-				log.Info().Msgf("✅ %s is present", analyzer.name)
-			} else {
-				log.Warn().Msgf("❌ %s is missing, (\"%s\")",
-					analyzer.name, analyzer.generateCommand(rootDir))
-			}
+		if analyzer.checker(yamlStrings) {
+			log.Info().Msgf("✅ %s is present", analyzer.name)
+		} else {
+			log.Warn().Msgf("❌ %s is missing, (\"%s\")",
+				analyzer.name, analyzer.generateCommand(rootDir))
+			suggestedCount = 0
 		}
+	}
+	if suggestedCount == 0 {
+		log.Info().Msg("No Actions changes")
 	}
 }
 
