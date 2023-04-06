@@ -144,13 +144,13 @@ func (option Option) getYamlConfig(repoDir string) (*string, error) {
 func (option Option) IsApplicable(dir string) bool {
 	switch option {
 	case _BuildAndroid:
-		return hasFile(dir, "build.gradle")
+		return hasFile(dir, "AndroidManifest.xml")
 	case _BuildDocker:
 		return hasFile(dir, "Dockerfile")
 	case FormatGo:
 		return hasFile(dir, "*.go")
 	case LintAndroid:
-		return hasFile(dir, "build.gradle")
+		return hasFile(dir, "AndroidManifest.xml")
 	case LintDocker:
 		return hasFile(dir, "Dockerfile")
 	case LintGo:
