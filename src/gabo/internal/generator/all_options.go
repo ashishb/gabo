@@ -177,6 +177,40 @@ func (option Option) IsApplicable(dir string) bool {
 	}
 }
 
+func (option Option) Name() string {
+	switch option {
+	case _BuildAndroid:
+		return "Build Android"
+	case _BuildDocker:
+		return "Build Docker"
+	case FormatGo:
+		return "Go Formatter"
+	case LintAndroid:
+		return "Android Linter"
+	case LintDocker:
+		return "Docker Linter"
+	case LintGo:
+		return "Go Linter"
+	case LintMarkdown:
+		return "Markdown Linter"
+	case LintPython:
+		return "Python Linter"
+	case LintShellScript:
+		return "Shell Script Linter"
+	case LintSolidity:
+		return "Solidity Linter"
+	case LintYaml:
+		return "YAML Linter"
+	case TranslateAndroid:
+		return "Android Auto-translator"
+	case ValidateOpenApiSchema:
+		return "OpenAPI Schema Validator"
+	default:
+		log.Panic().Msgf("unexpected case: %s ", option)
+		return ""
+	}
+}
+
 func getPath(rootDir string, fileName string) string {
 	return filepath.Join(rootDir, ".github", "workflows", fileName)
 }

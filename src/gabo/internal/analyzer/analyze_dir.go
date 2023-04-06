@@ -11,7 +11,6 @@ import (
 )
 
 type _Analyzer struct {
-	name    string
 	option  generator.Option
 	checker func(yamlStrings []string) bool
 }
@@ -28,6 +27,10 @@ func (a _Analyzer) isApplicable(rootDir string) bool {
 	return a.option.IsApplicable(rootDir)
 }
 
+func (a _Analyzer) Name() string {
+	return a.option.Name()
+}
+
 func Analyze(rootDir string) {
 	workflowsDir := filepath.Join(rootDir, ".github", "workflows")
 	yamlStrings, err := getYamlData(workflowsDir)
@@ -35,30 +38,30 @@ func Analyze(rootDir string) {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
 	analyzers := []_Analyzer{
-		{"Android Linter", generator.LintAndroid, isAndroidLinterImplemented},
-		{"Android Auto-translate", generator.TranslateAndroid, isAndroidAutoTranslatorImplemented},
-		{"Docker Linter", generator.LintDocker, isDockerLinterImplemented},
-		{"Markdown Linter", generator.LintMarkdown, isMarkdownLinterImplemented},
-		{"Go Linter", generator.LintGo, isGoLinterImplemented},
-		{"Go Formatter", generator.FormatGo, isGoFormatterImplemented},
-		{"OpenAPI Schema Validator", generator.ValidateOpenApiSchema, isOpenApiSchemaValidatorImplemented},
-		{"Python Linter", generator.LintPython, isPythonLinterImplemented},
-		{"Shellscript Linter", generator.LintShellScript, isShellScriptLinterImplemented},
-		{"Solidity Linter", generator.LintSolidity, isSolidityLinterImplemented},
-		{"YAML Linter", generator.LintYaml, isYamlLinterImplemented},
+		{generator.LintAndroid, isAndroidLinterImplemented},
+		{generator.TranslateAndroid, isAndroidAutoTranslatorImplemented},
+		{generator.LintDocker, isDockerLinterImplemented},
+		{generator.LintMarkdown, isMarkdownLinterImplemented},
+		{generator.LintGo, isGoLinterImplemented},
+		{generator.FormatGo, isGoFormatterImplemented},
+		{generator.ValidateOpenApiSchema, isOpenApiSchemaValidatorImplemented},
+		{generator.LintPython, isPythonLinterImplemented},
+		{generator.LintShellScript, isShellScriptLinterImplemented},
+		{generator.LintSolidity, isSolidityLinterImplemented},
+		{generator.LintYaml, isYamlLinterImplemented},
 	}
 
 	suggestedCount := 0
 	for _, analyzer := range analyzers {
 		if !analyzer.isApplicable(rootDir) {
-			log.Trace().Msgf("Not applicable %s", analyzer.name)
+			log.Trace().Msgf("Not applicable %s", analyzer.Name())
 			continue
 		}
 		if analyzer.checker(yamlStrings) {
-			log.Info().Msgf("✅ %s is present", analyzer.name)
+			log.Info().Msgf("✅ %s is present", analyzer.Name())
 		} else {
 			log.Warn().Msgf("❌ %s is missing, (\"%s\")",
-				analyzer.name, analyzer.generateCommand(rootDir))
+				analyzer.Name(), analyzer.generateCommand(rootDir))
 			suggestedCount = 0
 		}
 	}
