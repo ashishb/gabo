@@ -50,7 +50,7 @@ func GetOptions() []Option {
 			newPatternMatcher("gofmt -l", "go fmt", "gofumpt "),
 			newGenerator(_formatGoYaml), "format-go.yaml"},
 		_Option{"Go Linter", "lint-go", newFileMatcher("*.go"),
-			newPatternMatcher("golangci-lint run "),
+			newPatternMatcher("golangci-lint"),
 			newGenerator2(generateGoLintYaml), "lint-go.yaml"},
 		_Option{"Go Releaser Config Checker", "check-go-releaser",
 			newFileMatcher(_goReleaserConfigFiles...),
