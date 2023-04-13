@@ -79,7 +79,7 @@ func GetOptions() []Option {
 			newPatternMatcher("solhint "),
 			newGenerator(_lintSolidityYaml), "lint-solidity.yaml"},
 		_Option{"YAML Linter", "lint-yaml", newFileMatcher("*.yml", "*.yaml"),
-			newPatternMatcher("yamllint "),
+			newPatternMatcher("ibiqlik/action-yamllint@"),
 			newGenerator(_lintYamlYaml), "lint-yaml.yaml"},
 	}
 }
