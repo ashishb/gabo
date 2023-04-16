@@ -18,6 +18,13 @@ Feel free to add more branches if you want to runs these checks when push/pull r
 go install github.com/ashishb/gabo/src/gabo/cmd/gabo@latest
 ```
 
+Or run directly
+
+```bash
+# --dir flag is optional and defaults to current directory
+go run github.com/ashishb/gabo/src/gabo/cmd/gabo@latest --dir=<path-to-git-dir>
+```
+
 ## Usage
 
 ```bash
