@@ -26,7 +26,7 @@ var (
 		fmt.Sprintf("Mode to operate in: %s", _validModes))
 	_gitDir = flag.String("dir", ".", "Path to root of git directory")
 
-	_option = flag.String("for", "", fmt.Sprintf("Generate GitHub Action (options: %s)",
+	_options = flag.String("for", "", fmt.Sprintf("Generate GitHub Action (options: %s)",
 		strings.Join(generator.GetOptionFlags(), ",")))
 	_force = flag.Bool("force", false,
 		fmt.Sprintf("Force overwrite existing files (in %s mode)", _modeGenerate))
@@ -62,7 +62,7 @@ func main() {
 		log.Info().Msgf("Analyzing dir '%s'", *_gitDir)
 		analyzer.Analyze(*_gitDir)
 	case _modeGenerate:
-		err := generator.NewGenerator(*_gitDir, *_force).Generate(*_option)
+		err := generator.NewGenerator(*_gitDir, *_force).Generate(strings.Split(*_options, ","))
 		if err != nil {
 			log.Fatal().Err(err).Msgf("Failed to generate")
 		}
@@ -81,14 +81,17 @@ func validateFlags() {
 		return
 	}
 	if *_mode == _modeGenerate {
-		if _option == nil {
+		if _options == nil {
 			log.Fatal().Msgf("'for' not provided in in %s mode", _modeGenerate)
 			return
 		}
-		if !generator.IsValid(*_option) {
-			log.Fatal().Msgf("'for' is not valid, valid options are %s",
-				strings.Join(generator.GetOptionFlags(), ","))
-			return
+		options := strings.Split(*_options, ",")
+		for _, option := range options {
+			if !generator.IsValid(option) {
+				log.Fatal().Msgf("'for' is not valid, valid options are one or more of %s",
+					strings.Join(generator.GetOptionFlags(), ","))
+				return
+			}
 		}
 	}
 }

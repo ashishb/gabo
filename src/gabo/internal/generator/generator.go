@@ -19,19 +19,25 @@ func NewGenerator(dir string, force bool) Generator {
 	}
 }
 
-func (g Generator) Generate(optionStr string) error {
+func (g Generator) Generate(options []string) error {
 	if g.force {
 		log.Warn().Msgf("Force overwrite is on, existing files will be over-written")
 	}
-	option, err := getOptionForFlag(optionStr)
-	if err != nil {
-		return err
+	for _, optionStr := range options {
+		option, err := getOptionForFlag(optionStr)
+		if err != nil {
+			return err
+		}
+		str, err := (*option).GetYamlConfig(g.dir)
+		if err != nil {
+			return err
+		}
+		err = writeOrWarn((*option).GetOutputFileName(g.dir), *str, g.force)
+		if err != nil {
+			return err
+		}
 	}
-	str, err := (*option).GetYamlConfig(g.dir)
-	if err != nil {
-		return err
-	}
-	return writeOrWarn((*option).GetOutputFileName(g.dir), *str, g.force)
+	return nil
 }
 
 func getOptionForFlag(target string) (*Option, error) {

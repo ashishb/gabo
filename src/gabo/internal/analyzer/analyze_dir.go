@@ -25,7 +25,7 @@ func Analyze(rootDir string) {
 		log.Fatal().Msgf("Error: %s", err.Error())
 	}
 
-	suggestedCount := 0
+	missingAnalyzers := make([]string, 0)
 	for _, analyzer := range generator.GetOptions() {
 		if !analyzer.IsApplicable(rootDir) {
 			log.Trace().Msgf("Not applicable %s", analyzer.Name())
@@ -34,14 +34,18 @@ func Analyze(rootDir string) {
 		if analyzer.IsImplemented(yamlStrings) {
 			log.Info().Msgf("✅ %s is present", analyzer.Name())
 		} else {
-			log.Warn().Msgf("❌ %s is missing, (\"%s\")",
+			log.Warn().Msgf("❌ %s is missing, generate via \"%s\"",
 				analyzer.Name(), generateCommand(analyzer.FlagName(), rootDir))
-			suggestedCount += 1
+			missingAnalyzers = append(missingAnalyzers, analyzer.FlagName())
 		}
 	}
-	if suggestedCount == 0 {
+	if len(missingAnalyzers) == 0 {
 		log.Info().Msg("No changes required")
+		return
 	}
+	log.Info().Msgf("Run the following command to generate "+
+		"all the suggested GitHub Actions:\n%s", generateCommand(
+		strings.Join(missingAnalyzers, ","), rootDir))
 }
 
 func getYamlData(dir string) ([]string, error) {
