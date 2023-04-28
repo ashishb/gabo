@@ -36,11 +36,11 @@ func Analyze(rootDir string) {
 		} else {
 			log.Warn().Msgf("❌ %s is missing, (\"%s\")",
 				analyzer.Name(), generateCommand(analyzer.FlagName(), rootDir))
-			suggestedCount = 0
+			suggestedCount += 1
 		}
 	}
 	if suggestedCount == 0 {
-		log.Info().Msg("No Actions changes")
+		log.Info().Msg("No changes required")
 	}
 }
 
