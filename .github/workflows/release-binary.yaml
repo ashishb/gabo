@@ -5,7 +5,7 @@ name: Create release
 on:
   workflow_dispatch:
   push:
-    branch: ["main", "master"]
+    branches: ["main", "master"]
     # Release whenever this file changes
     paths:
       - "./src/gabo/cmd/gabo/version.txt"
