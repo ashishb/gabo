@@ -44,9 +44,13 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: zulu
-          java-version: 11
-          cache: gradle
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Use Gradle Build cache
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: "current"
 
       - name: Validate Gradle Wrapper is a known binary
         uses: gradle/wrapper-validation-action@v1

@@ -42,11 +42,11 @@ jobs:
       - name: Validate Gradle Wrapper is a known binary
         uses: gradle/wrapper-validation-action@v1
 
-      - name: set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: "11"
-          distribution: "temurin"
+          java-version: "17"
+          distribution: "zulu"
 
       - name: Use Gradle Build cache
         uses: gradle/gradle-build-action@v2
