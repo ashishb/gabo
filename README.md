@@ -63,20 +63,20 @@ Wrote file .github/workflows/lint-docker.yaml
 
 ### Supported actions
 
-[x] build-android
-[x] build-docker
-[x] check-go-releaser
-[x] format-go
-[x] lint-android
-[x] lint-docker
-[x] lint-go
-[x] lint-html
-[x] lint-markdown
-[x] lint-python
-[x] lint-shell-script
-[x] lint-solidity
-[x] lint-yaml
-[x] translate-android
-[x] validate-openapi-schema
-[] build-rust
-[] lint-rust
+- [x] build-android
+- [x] build-docker
+- [x] check-go-releaser
+- [x] format-go
+- [x] lint-android
+- [x] lint-docker
+- [x] lint-go
+- [x] lint-html
+- [x] lint-markdown
+- [x] lint-python
+- [x] lint-shell-script
+- [x] lint-solidity
+- [x] lint-yaml
+- [x] translate-android
+- [x] validate-openapi-schema
+- [ ] build-rust
+- [ ] lint-rust
