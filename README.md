@@ -5,7 +5,7 @@
 
 [![Check Go Releaser config for validity](https://github.com/ashishb/gabo/actions/workflows/check-goreleaser-config.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/check-goreleaser-config.yaml)
 
-[![Release Go binaries with Go Releaser](https://github.com/ashishb/gabo/actions/workflows/release-binary.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/release-binary.yaml)
+[![Release Go binaries with Go Releaser](https://github.com/ashishb/gabo/actions/workflows/release-binary.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/release-binary.yaml) [![Go report](https://img.shields.io/badge/go%20report-A+-brightgreen.svg?style=flat)](https://goreportcard.com/report/github.com/ashishb/gabo/src/gabo)
 
 **gabo** short for GitHub Actions Boilerplate is for ease-of-generation of GitHub actions boilerplate with good timeouts, path filters, and concurrency preventions. See [this blogpost](https://ashishb.net/tech/common-pitfalls-of-github-actions/) for more details on why the GitHub defaults aren't great.
 
