@@ -24,7 +24,8 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        python-version: [3.7]
+        # https://devguide.python.org/versions
+        python-version: ["3.8"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -35,9 +36,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           # Options are pip, pipenv, or poetry
           cache: "pip"
+          cache-dependency-path: '**/requirements.txt'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: find . -iname requirements.txt -exec pip install -r {} \;
 
       - name: Install pylint and flake8
         run: |
@@ -48,7 +50,7 @@ jobs:
         run: |
           # Add ignore rules here via --disable
           # By default, only errors and warnings are enabled
-          python3 -m pylint --disable=R,C --recrusive=y .
+          python3 -m pylint --disable=R,C --recursive=y .
 
       - name: Run flake8
         run: |
