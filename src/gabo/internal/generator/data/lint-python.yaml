@@ -55,5 +55,5 @@ jobs:
       - name: Run flake8
         run: |
           # Add ignore rules here via --ignore
-          flake8 src --count --ignore=E501,W504 --show-source --statistics
-          flake8 src --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          flake8 . --count --ignore=E501,W504 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
