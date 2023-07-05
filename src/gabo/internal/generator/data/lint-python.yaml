@@ -6,11 +6,15 @@ on:  # yamllint disable-line rule:truthy
     branches: [main, master]
     paths:
       - "**/*.py"
+      - "**/requirements.txt"
+      - "**/requirements-dev.txt"
       - ".github/workflows/lint-python.yaml"
   pull_request:
     branches: [main, master]
     paths:
       - "**/*.py"
+      - "**/requirements.txt"
+      - "**/requirements-dev.txt"
       - ".github/workflows/lint-python.yaml"
 
 
