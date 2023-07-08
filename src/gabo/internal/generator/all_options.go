@@ -1,10 +1,11 @@
 package generator
 
 import (
-	"github.com/rs/zerolog/log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 type Option interface {
@@ -24,63 +25,98 @@ func GetOptions() []Option {
 	// _TestPython Option = "test-python"
 
 	return []Option{
-		_Option{"Android Builder", "build-android",
+		_Option{
+			"Android Builder", "build-android",
 			newFileMatcher("AndroidManifest.xml"),
 			newPatternMatcher("gradlew build"),
-			newGenerator2(generateBuildAndroidYaml), "build-android.yaml"},
-		_Option{"Android Linter", "lint-android",
+			newGenerator2(generateBuildAndroidYaml), "build-android.yaml",
+		},
+		_Option{
+			"Android Linter", "lint-android",
 			newFileMatcher("AndroidManifest.xml"),
 			newPatternMatcher("gradlew lint"),
-			newGenerator(_lintAndroidYaml), "lint-android.yaml"},
-		_Option{"Android Auto Translator", "translate-android",
+			newGenerator(_lintAndroidYaml), "lint-android.yaml",
+		},
+		_Option{
+			"Android Auto Translator", "translate-android",
 			newFileMatcher("AndroidManifest.xml"),
 			newPatternMatcher("ashishb/android-auto-translate"),
 			newGenerator(_translateAndroidYaml),
-			"translate-android.yaml"},
-
-		_Option{"Docker Builder", "build-docker",
+			"translate-android.yaml",
+		},
+		_Option{
+			"Compress Images", "compress-images",
+			newFileMatcher("*.jpg", "*.jpeg", "*.png", "*.webp"),
+			newPatternMatcher("calibreapp/image-actions"),
+			newGenerator(_comressImageYaml), "compress-images.yaml",
+		},
+		_Option{
+			"Docker Builder", "build-docker",
 			newFileMatcher("Dockerfile"),
 			newPatternMatcher("docker build "),
-			newGenerator2(generateBuildDockerYaml), "build-docker.yaml"},
-		_Option{"Docker Linter", "lint-docker", newFileMatcher("Dockerfile"),
+			newGenerator2(generateBuildDockerYaml), "build-docker.yaml",
+		},
+		_Option{
+			"Docker Linter", "lint-docker", newFileMatcher("Dockerfile"),
 			newPatternMatcher("hadolint "),
-			newGenerator(_lintDockerYaml), "lint-docker.yaml"},
+			newGenerator(_lintDockerYaml), "lint-docker.yaml",
+		},
 
-		_Option{"Go Formatter", "format-go", newFileMatcher("*.go"),
+		_Option{
+			"Go Formatter", "format-go", newFileMatcher("*.go"),
 			newPatternMatcher("gofmt -l", "go fmt", "gofumpt "),
-			newGenerator(_formatGoYaml), "format-go.yaml"},
-		_Option{"Go Linter", "lint-go", newFileMatcher("*.go"),
+			newGenerator(_formatGoYaml), "format-go.yaml",
+		},
+		_Option{
+			"Go Linter", "lint-go", newFileMatcher("*.go"),
 			newPatternMatcher("golangci-lint"),
-			newGenerator2(generateGoLintYaml), "lint-go.yaml"},
-		_Option{"Go Releaser Config Checker", "check-go-releaser",
+			newGenerator2(generateGoLintYaml), "lint-go.yaml",
+		},
+		_Option{
+			"Go Releaser Config Checker", "check-go-releaser",
 			newFileMatcher(_goReleaserConfigFiles...),
 			newPatternMatcher("goreleaser check "),
-			newGenerator2(generateGoReleaserConfigCheckerYaml), "check-goreleaser-config.yaml"},
+			newGenerator2(generateGoReleaserConfigCheckerYaml), "check-goreleaser-config.yaml",
+		},
 
-		_Option{"HTML Linter", "lint-html", newFileMatcher("*.html", "*.htm"),
+		_Option{
+			"HTML Linter", "lint-html", newFileMatcher("*.html", "*.htm"),
 			newPatternMatcher("htmlhint "), newGenerator(_lintHtmlYaml),
-			"lint-html.yaml"},
+			"lint-html.yaml",
+		},
 
-		_Option{"Markdown Linter", "lint-markdown", newFileMatcher("*.md"),
+		_Option{
+			"Markdown Linter", "lint-markdown", newFileMatcher("*.md"),
 			newPatternMatcher("mdl "),
-			newGenerator(_lintMarkdownYaml), "lint-markdown.yaml"},
-		_Option{"OpenAPI Schema Validator", "validate-openapi-schema",
+			newGenerator(_lintMarkdownYaml), "lint-markdown.yaml",
+		},
+		_Option{
+			"OpenAPI Schema Validator", "validate-openapi-schema",
 			newFileMatcher(_openAPIFileList...),
 			newPatternMatcher("mpetrunic/swagger-cli-action"),
 			newGenerator2(generateOpenAPISchemaValidator),
-			"validate-openapi-schema.yaml"},
-		_Option{"Python Linter", "lint-python", newFileMatcher("*.py"),
+			"validate-openapi-schema.yaml",
+		},
+		_Option{
+			"Python Linter", "lint-python", newFileMatcher("*.py"),
 			newPatternMatcher("pylint "),
-			newGenerator(_lintPythonYaml), "lint-python.yaml"},
-		_Option{"Shell Script Linter", "lint-shell-script", newFileMatcher("*.sh", "*.bash"),
+			newGenerator(_lintPythonYaml), "lint-python.yaml",
+		},
+		_Option{
+			"Shell Script Linter", "lint-shell-script", newFileMatcher("*.sh", "*.bash"),
 			newPatternMatcher("shellcheck "),
-			newGenerator(_lintShellScriptYaml), "lint-shell-script.yaml"},
-		_Option{"Solidity Linter", "lint-solidity", newFileMatcher("*.sol"),
+			newGenerator(_lintShellScriptYaml), "lint-shell-script.yaml",
+		},
+		_Option{
+			"Solidity Linter", "lint-solidity", newFileMatcher("*.sol"),
 			newPatternMatcher("solhint "),
-			newGenerator(_lintSolidityYaml), "lint-solidity.yaml"},
-		_Option{"YAML Linter", "lint-yaml", newFileMatcher("*.yml", "*.yaml"),
+			newGenerator(_lintSolidityYaml), "lint-solidity.yaml",
+		},
+		_Option{
+			"YAML Linter", "lint-yaml", newFileMatcher("*.yml", "*.yaml"),
 			newPatternMatcher("ibiqlik/action-yamllint@"),
-			newGenerator(_lintYamlYaml), "lint-yaml.yaml"},
+			newGenerator(_lintYamlYaml), "lint-yaml.yaml",
+		},
 	}
 }
 
