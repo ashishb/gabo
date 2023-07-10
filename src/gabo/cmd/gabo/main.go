@@ -69,6 +69,7 @@ func main() {
 	}
 }
 
+// validateFlags validates flags
 // This will normalize values of certain flags like _gitDir as well
 func validateFlags() {
 	if *_mode != _modeAnalyze && *_mode != _modeGenerate && !*_version {
@@ -96,6 +97,7 @@ func validateFlags() {
 	}
 }
 
+// validateGitDir validates the provided dir is a git directory
 func validateGitDir() bool {
 	if len(*_gitDir) == 0 {
 		log.Fatal().Msgf("dir cannot be empty")
