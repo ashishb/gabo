@@ -15,6 +15,7 @@ on:  # yamllint disable-line rule:truthy
       - ".github/workflows/validate-openapi-schema.yaml"
       - "**/openapi.json"
       - "**/openapi.yaml"
+      - "**/openapi.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
