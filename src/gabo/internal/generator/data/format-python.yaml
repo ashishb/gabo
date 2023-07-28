@@ -1,0 +1,46 @@
+---
+name: Check Python code formatting
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "**/*.py"
+      - ".github/workflows/format-python.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**/*.py"
+      - ".github/workflows/format-python.yaml"
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  formatython:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          # Options are pip, pipenv, or poetry
+          cache: "pip"
+          cache-dependency-path: '**/requirements.txt'
+
+      - name: Install black
+        run: |
+          pip install black
+
+      - name: Check with black formatter
+        run: |
+          black . --check --diff

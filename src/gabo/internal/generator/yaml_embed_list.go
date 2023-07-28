@@ -13,6 +13,8 @@ var (
 	_comressImageYaml string
 	//go:embed data/format-go.yaml
 	_formatGoYaml string
+	//go:embed data/format-python.yaml
+	_formatPythonYaml string
 	//go:embed data/validate-openapi-schema.incomplete.yaml
 	_generateOpenAPISchemaValidatorTemplate string
 	//go:embed data/lint-android.yaml

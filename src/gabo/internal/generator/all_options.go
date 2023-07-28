@@ -98,6 +98,11 @@ func GetOptions() []Option {
 			"validate-openapi-schema.yaml",
 		},
 		_Option{
+			"Python Formatter", "format-python", newFileMatcher("*.py"),
+			newPatternMatcher("black "),
+			newGenerator(_formatPythonYaml), "format-python.yaml",
+		},
+		_Option{
 			"Python Linter", "lint-python", newFileMatcher("*.py"),
 			newPatternMatcher("pylint "),
 			newGenerator(_lintPythonYaml), "lint-python.yaml",
