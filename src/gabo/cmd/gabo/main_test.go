@@ -14,6 +14,8 @@ func TestGenerateALinter(t *testing.T) {
 	dirPath, err := os.MkdirTemp("", "gabo-git-test")
 	assert.NoError(t, err)
 	t.Logf("Dir name is %s", dirPath)
+	// Cleanup
+	defer os.RemoveAll(dirPath)
 
 	setFlagOrFail(t, "dir", dirPath)
 	setFlagOrFail(t, "mode", _modeAnalyze)
