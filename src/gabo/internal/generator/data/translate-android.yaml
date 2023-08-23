@@ -33,4 +33,3 @@ jobs:
           commit-message: "Auto-generated translations by [Android Auto Translate](https://github.com/ashishb/android-auto-translate) bot"
           title: "[Bot]Auto-generated translations for non-English languages"
           body: "Auto-generated translations by [Android Auto Translate](https://github.com/ashishb/android-auto-translate) bot"
-
