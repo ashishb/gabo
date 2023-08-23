@@ -18,11 +18,11 @@ func generateCommand(flagName string, rootDir string) string {
 	return fmt.Sprintf("%s --mode=generate --for=%s --dir=%s", os.Args[0], flagName, rootDir)
 }
 
-func Analyze(rootDir string) {
+func Analyze(rootDir string) error {
 	workflowsDir := filepath.Join(rootDir, ".github", "workflows")
 	yamlStrings, err := getYamlData(workflowsDir)
 	if err != nil {
-		log.Fatal().Msgf("Error: %s", err.Error())
+		return err
 	}
 
 	missingAnalyzers := make([]string, 0)
@@ -41,11 +41,12 @@ func Analyze(rootDir string) {
 	}
 	if len(missingAnalyzers) == 0 {
 		log.Info().Msg("No changes required")
-		return
+		return nil
 	}
 	log.Info().Msgf("Run the following command to generate "+
 		"all the suggested GitHub Actions:\n%s", generateCommand(
 		strings.Join(missingAnalyzers, ","), rootDir))
+	return nil
 }
 
 func getYamlData(dir string) ([]string, error) {
