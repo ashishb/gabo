@@ -27,8 +27,10 @@ jobs:
         uses: ashishb/android-auto-translate@master
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           committer: "ashishb's Translation Bot <ashishb+android-auto-translate@ashishb.net>"
+          commit-message: "Auto-generated translations by [Android Auto Translate](https://github.com/ashishb/android-auto-translate) bot"
           title: "[Bot]Auto-generated translations for non-English languages"
           body: "Auto-generated translations by [Android Auto Translate](https://github.com/ashishb/android-auto-translate) bot"
+
