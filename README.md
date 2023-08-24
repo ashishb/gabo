@@ -67,6 +67,7 @@ Wrote file .github/workflows/lint-docker.yaml
 - [x] build-android
 - [x] build-docker
 - [x] check-go-releaser
+- [x] compress-images
 - [x] format-go
 - [x] format-python
 - [x] lint-android
