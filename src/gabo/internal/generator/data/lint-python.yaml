@@ -5,14 +5,14 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [main, master]
     paths:
-      - "**/*.py"
+      - "**.py"
       - "**/requirements.txt"
       - "**/requirements-dev.txt"
       - ".github/workflows/lint-python.yaml"
   pull_request:
     branches: [main, master]
     paths:
-      - "**/*.py"
+      - "**.py"
       - "**/requirements.txt"
       - "**/requirements-dev.txt"
       - ".github/workflows/lint-python.yaml"

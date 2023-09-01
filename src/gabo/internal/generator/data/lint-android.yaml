@@ -7,9 +7,9 @@ on:  # yamllint disable-line rule:truthy
     paths:
       - ".github/workflows/lint-android.yaml"
       # TODO: Make this more narrow in case of a monorepo
-      - "**/*.java"
-      - "**/*.kt"
-      - "**/*.gradle"
+      - "**.java"
+      - "**.kt"
+      - "**.gradle"
       - "**/gradle/**"
       - "gradle.properties"
       - "gradlew*"
@@ -19,9 +19,9 @@ on:  # yamllint disable-line rule:truthy
     paths:
       - ".github/workflows/lint-android.yaml"
       # TODO: Make this more narrow in case of a monorepo
-      - "**/*.java"
-      - "**/*.kt"
-      - "**/*.gradle"
+      - "**.java"
+      - "**.kt"
+      - "**.gradle"
       - "**/gradle/**"
       - "gradle.properties"
       - "gradlew*"
