@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # To lint multiple docker files
       # Ref: https://github.com/hadolint/hadolint-action/issues/54#issuecomment-1130157411
