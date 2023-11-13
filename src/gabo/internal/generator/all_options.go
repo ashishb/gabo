@@ -57,6 +57,16 @@ func GetOptions() []Option {
 			newGenerator2(generateBuildDockerYaml), "build-docker.yaml",
 		},
 		_Option{
+			"NPM Builder", "build-npm", newFileMatcher("package-lock.json"),
+			newPatternMatcher("npm install "),
+			newGenerator2(generateBuildNpmYaml), "build-npm.yaml",
+		},
+		_Option{
+			"Yarn Builder", "build-yarn", newFileMatcher("yarn.lock"),
+			newPatternMatcher("yarn build"),
+			newGenerator2(generateBuildYarnYaml), "build-yarn.yaml",
+		},
+		_Option{
 			"Docker Linter", "lint-docker", newFileMatcher("Dockerfile"),
 			newPatternMatcher("hadolint "),
 			newGenerator(_lintDockerYaml), "lint-docker.yaml",
