@@ -4,8 +4,8 @@ import "fmt"
 
 const _buildDockerTask = `
       - name: Docker build using %s/Dockerfile
+        working-directory: "%s"
         run: |
-          cd "%s"
           DOCKER_BUILDKIT=1 docker buildx build --cache-from type=gha --cache-to type=gha  -f Dockerfile .
 `
 

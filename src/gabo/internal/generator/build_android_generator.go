@@ -4,8 +4,8 @@ import "fmt"
 
 const _buildAndroidTask = `
       - name: Build with Gradle (dir %s)
+        working-directory: "%s"
         run: |
-          cd "%s"
           chmod +x gradlew
           ./gradlew buildDebug
 `
