@@ -40,7 +40,7 @@ jobs:
       - name: Read gabo version name
         id: read-version
         run: |
-          echo "version=$(cat src/gabo/cmd/gabo/version.txt)" > $GITHUB_OUTPUT
+          echo "version=$(cat src/gabo/cmd/gabo/version.txt)" > "$GITHUB_OUTPUT"
 
       - name: Create new tag
         id: tag_version

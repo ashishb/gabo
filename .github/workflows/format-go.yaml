@@ -51,4 +51,4 @@ jobs:
       - name: Validate code formatting
         run: |
           gofmt -l .
-          test -z $(gofmt -l .)
+          test -z "$(gofmt -l .)"
