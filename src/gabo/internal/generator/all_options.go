@@ -53,7 +53,7 @@ func GetOptions() []Option {
 		_Option{
 			"Docker Builder", "build-docker",
 			newFileMatcher("Dockerfile"),
-			newPatternMatcher("docker build "),
+			newPatternMatcher("docker build ", "docker buildx"),
 			newGenerator2(generateBuildDockerYaml), "build-docker.yaml",
 		},
 		_Option{
