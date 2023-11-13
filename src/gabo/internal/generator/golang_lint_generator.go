@@ -13,6 +13,8 @@ const _goLangLintTask = `
       - name: Run golangci-lint on %s
         uses: golangci/golangci-lint-action@v3
         with:
+          # We use cache provided by "actions/setup-go@v4"
+          skip-cache: true
           # Directory containing go.mod file
           working-directory: "%s"
 `

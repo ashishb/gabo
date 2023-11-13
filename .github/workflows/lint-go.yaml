@@ -51,5 +51,7 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
+          # We use cache provided by "actions/setup-go@v4"
+          skip-cache: true
           # Directory containing go.mod file
           working-directory: src/gabo
