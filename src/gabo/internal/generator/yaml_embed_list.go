@@ -7,6 +7,10 @@ var (
 	_buildAndroidTemplate string
 	//go:embed data/build-docker-incomplete.yaml
 	_buildDockerTemplate string
+	//go:embed data/build-npm-incomplete.yaml
+	_buildNpmTemplate string
+	//go:embed data/build-yarn-incomplete.yaml
+	_buildYarnTemplate string
 	//go:embed data/check-goreleaser-config.yaml
 	_checkGoReleaserConfigTemplate string
 	//go:embed data/compress-images.yaml

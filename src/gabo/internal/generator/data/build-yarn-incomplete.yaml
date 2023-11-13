@@ -1,0 +1,27 @@
+---
+name: Build Node.js package(s)
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "**/yarn-lock.json"
+      - ".github/workflows/build-yarn.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**/yarn-lock.json"
+      - ".github/workflows/build-yarn.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  buildYarn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4

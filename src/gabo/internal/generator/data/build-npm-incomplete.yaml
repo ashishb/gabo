@@ -1,0 +1,27 @@
+---
+name: Build Node.js package(s)
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "**/package-lock.json"
+      - ".github/workflows/build-npm.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**/package-lock.json"
+      - ".github/workflows/build-npm.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  buildNpm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
