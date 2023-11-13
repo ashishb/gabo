@@ -50,3 +50,5 @@ jobs:
                 level: warning
               trailing-spaces:
                 level: warning
+      - name: Lint GitHub Actions
+        uses: reviewdog/action-actionlint@v1
