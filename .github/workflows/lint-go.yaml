@@ -49,7 +49,7 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v5
+        uses: golangci/golangci-lint-action@v6
         with:
           # We use cache provided by "actions/setup-go@v5"
           skip-cache: true
