@@ -11,7 +11,7 @@ import (
 const _goLangLintTask = `
 
       - name: Run golangci-lint on %s
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6
         with:
           # We use cache provided by "actions/setup-go"
           skip-cache: true
