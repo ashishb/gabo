@@ -39,7 +39,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: {{matrix.go-version}}
+          go-version: ${{ matrix.go-version }}
           cache-dependency-path: src/gabo/go.sum
 
       - name: Install Go Releaser

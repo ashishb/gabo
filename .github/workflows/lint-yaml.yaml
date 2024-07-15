@@ -58,4 +58,5 @@ jobs:
         run: |
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
           ./actionlint -color -shellcheck=
+          ./actionlint -color -shellcheck= src/gabo/internal/generator/data/*
         shell: bash
