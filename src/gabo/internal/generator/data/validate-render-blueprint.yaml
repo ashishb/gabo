@@ -1,0 +1,48 @@
+---
+# Run this locally with act - https://github.com/nektos/act
+# act -j validateRenderBlueprint
+name: Validate Render Blueprint
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [main, master]
+    paths:
+      - "render.yml"
+      - "render.yaml"
+      - ".github/workflows/validate-render-blueprint.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "render.yml"
+      - "render.yaml"
+      - ".github/workflows/validate-render-blueprint.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validateRenderBlueprint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            render.yml
+            render.yaml
+
+      - name: Download render.com blueprint schema
+        run: |
+          wget https://render.com/schema/render.yaml.json -O /tmp/render.yaml.json
+
+      - name: Validate Render Blueprint
+        uses: GrantBirki/json-yaml-validate@v3
+        with:
+          yaml_schema: /tmp/render.yaml.json  # validate YAML files against the schema
+          yaml_as_json: true
+          files: |
+            render.yml
+            render.yaml

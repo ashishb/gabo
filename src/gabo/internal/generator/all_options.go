@@ -132,6 +132,11 @@ func GetOptions() []Option {
 			newPatternMatcher("ibiqlik/action-yamllint@"),
 			newGenerator(_lintYamlYaml), "lint-yaml.yaml",
 		},
+		_Option{
+			"Render.com blueprint Validator", "validate-render-blueprint", newFileMatcher("render.yml", "render.yaml"),
+			newPatternMatcher("GrantBirki/json-yaml-validate"),
+			newGenerator(_validateRenderBlueprintYaml), "validate-render-blueprint.yaml",
+		},
 	}
 }
 

@@ -41,4 +41,6 @@ var (
 	_lintYamlYaml string
 	//go:embed data/translate-android.yaml
 	_translateAndroidYaml string
+	//go:embed data/validate-render-blueprint.yaml
+	_validateRenderBlueprintYaml string
 )
