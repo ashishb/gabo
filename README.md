@@ -34,7 +34,7 @@ Usage of gabo:
   -dir string
     Path to root of git directory (default ".")
   -for string
-    Generate GitHub Action (options: build-android,lint-android,translate-android,compress-images,build-docker,lint-docker,format-go,lint-go,check-go-releaser,lint-html,lint-markdown,validate-openapi-schema,format-python,lint-python,lint-shell-script,lint-solidity,lint-yaml)
+    Generate GitHub Action (options: build-android,lint-android,translate-android,compress-images,build-docker,build-npm,build-yarn,lint-docker,format-go,lint-go,check-go-releaser,lint-html,lint-markdown,validate-openapi-schema,format-python,lint-python,lint-shell-script,lint-solidity,lint-yaml,validate-render-blueprint)
   -force
     Force overwrite existing files (in generate mode)
   -mode string
@@ -81,5 +81,6 @@ Wrote file .github/workflows/lint-docker.yaml
 - [x] lint-yaml
 - [x] translate-android
 - [x] validate-openapi-schema
+- [x] validate-render-blueprint
 - [ ] build-rust
 - [ ] lint-rust
