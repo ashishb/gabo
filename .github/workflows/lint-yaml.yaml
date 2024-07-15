@@ -31,6 +31,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            "./**.yml"
+            "./**.yaml"
+            ".github/workflows/"
+
       - name: Check YAML files with linter
         uses: ibiqlik/action-yamllint@v3
         with:
