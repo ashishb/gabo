@@ -114,7 +114,7 @@ func GetOptions() []Option {
 		},
 		_Option{
 			"Python Linter", "lint-python", newFileMatcher("*.py"),
-			newPatternMatcher("pylint "),
+			newPatternMatcher("pylint ", "ruff "),
 			newGenerator(_lintPythonYaml), "lint-python.yaml",
 		},
 		_Option{
