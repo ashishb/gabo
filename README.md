@@ -15,7 +15,15 @@ Feel free to add more branches if you want to runs these checks when push/pull r
 ## Installation
 
 ```bash
-go install github.com/ashishb/gabo/src/gabo/cmd/gabo@latest
+$ go install github.com/ashishb/gabo/src/gabo/cmd/gabo@latest
+...
+```
+
+or via homebrew ![homebrew version](https://img.shields.io/homebrew/v/gabo)
+
+```bash
+$ brew install gabo
+...
 ```
 
 Or run directly
