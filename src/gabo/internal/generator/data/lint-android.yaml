@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "zulu"
           java-version: "17"
@@ -53,7 +53,7 @@ jobs:
           gradle-version: "current"
 
       - name: Validate Gradle Wrapper is a known binary
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/actions/wrapper-validation@v3
 
       #      # Required by apps that depend on Firebase
       #      - name: Add mock google-services.json
