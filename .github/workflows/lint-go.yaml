@@ -55,3 +55,7 @@ jobs:
           skip-cache: true
           # Directory containing go.mod file
           working-directory: src/gabo
+
+      - name: Run `govulncheck`
+        working-directory: src/gabo
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
