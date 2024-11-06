@@ -10,6 +10,10 @@ import (
 
 const _goLangLintTask = `
 
+      - name: Run "govulncheck"
+        working-directory: "%s"
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
       - name: Run golangci-lint on %s
         uses: golangci/golangci-lint-action@v6
         with:
@@ -28,7 +32,7 @@ func generateGoLintYaml(repoDir string) (*string, error) {
 	}
 	str := _lintGoTemplate
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_goLangLintTask, dir, dir)
+		str += fmt.Sprintf(_goLangLintTask, dir, dir, dir)
 	}
 	return &str, nil
 }
