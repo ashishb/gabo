@@ -13,7 +13,7 @@ const _validateSchemaTask = `
           command: 'validate %s/%s'
 `
 
-var _openAPIFileList = []string{"openapi.yaml", "openapi.yml", "openapi.json"}
+var _openAPIFileList = []string{"**/openapi.yaml", "**/openapi.yml", "**/openapi.json"}
 
 func generateOpenAPISchemaValidator(repoDir string) (*string, error) {
 	found := false

@@ -15,7 +15,7 @@ const _goReleaserCheckerTask = `
 `
 
 var _goReleaserConfigFiles = []string{
-	"goreleaser.yaml", "goreleaser.yml", ".goreleaser.yaml", ".goreleaser.yml",
+	"**/goreleaser.yaml", "**/goreleaser.yml", "**/.goreleaser.yaml", "**/.goreleaser.yml",
 }
 
 func generateGoReleaserConfigCheckerYaml(repoDir string) (*string, error) {

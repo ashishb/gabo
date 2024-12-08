@@ -1,11 +1,21 @@
 package generator
 
 import (
+	"github.com/bmatcuk/doublestar/v4"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/rs/zerolog/log"
+)
+
+const (
+	_AndroidManifestFile = "**/AndroidManifest.xml"
+	_dockerFile          = "**/Dockerfile"
+	_goFile              = "**/*.go"
+	_markdownFile        = "**/*.md"
+	_pythonFile          = "**/*.py"
 )
 
 type Option interface {
@@ -27,58 +37,58 @@ func GetOptions() []Option {
 	return []Option{
 		_Option{
 			"Android Builder", "build-android",
-			newFileMatcher("AndroidManifest.xml"),
+			newFileMatcher(_AndroidManifestFile),
 			newPatternMatcher("gradlew build"),
 			newGenerator2(generateBuildAndroidYaml), "build-android.yaml",
 		},
 		_Option{
 			"Android Linter", "lint-android",
-			newFileMatcher("AndroidManifest.xml"),
+			newFileMatcher(_AndroidManifestFile),
 			newPatternMatcher("gradlew lint"),
 			newGenerator(_lintAndroidYaml), "lint-android.yaml",
 		},
 		_Option{
 			"Android Auto Translator", "translate-android",
-			newFileMatcher("AndroidManifest.xml"),
+			newFileMatcher(_AndroidManifestFile),
 			newPatternMatcher("ashishb/android-auto-translate"),
 			newGenerator(_translateAndroidYaml),
 			"translate-android.yaml",
 		},
 		_Option{
 			"Compress Images", "compress-images",
-			newFileMatcher("*.jpg", "*.jpeg", "*.png", "*.webp"),
+			newFileMatcher("**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.webp"),
 			newPatternMatcher("calibreapp/image-actions"),
 			newGenerator(_comressImageYaml), "compress-images.yaml",
 		},
 		_Option{
 			"Docker Builder", "build-docker",
-			newFileMatcher("Dockerfile"),
+			newFileMatcher(_dockerFile),
 			newPatternMatcher("docker build ", "docker buildx"),
 			newGenerator2(generateBuildDockerYaml), "build-docker.yaml",
 		},
 		_Option{
-			"NPM Builder", "build-npm", newFileMatcher("package-lock.json"),
+			"NPM Builder", "build-npm", newFileMatcher("**/package-lock.json"),
 			newPatternMatcher("npm install "),
 			newGenerator2(generateBuildNpmYaml), "build-npm.yaml",
 		},
 		_Option{
-			"Yarn Builder", "build-yarn", newFileMatcher("yarn.lock"),
+			"Yarn Builder", "build-yarn", newFileMatcher("**/yarn.lock"),
 			newPatternMatcher("yarn build"),
 			newGenerator2(generateBuildYarnYaml), "build-yarn.yaml",
 		},
 		_Option{
-			"Docker Linter", "lint-docker", newFileMatcher("Dockerfile"),
+			"Docker Linter", "lint-docker", newFileMatcher(_dockerFile),
 			newPatternMatcher("hadolint "),
 			newGenerator(_lintDockerYaml), "lint-docker.yaml",
 		},
 
 		_Option{
-			"Go Formatter", "format-go", newFileMatcher("*.go"),
+			"Go Formatter", "format-go", newFileMatcher(_goFile),
 			newPatternMatcher("gofmt -l", "go fmt", "gofumpt "),
 			newGenerator(_formatGoYaml), "format-go.yaml",
 		},
 		_Option{
-			"Go Linter", "lint-go", newFileMatcher("*.go"),
+			"Go Linter", "lint-go", newFileMatcher(_goFile),
 			newPatternMatcher("golangci-lint"),
 			newGenerator2(generateGoLintYaml), "lint-go.yaml",
 		},
@@ -90,13 +100,13 @@ func GetOptions() []Option {
 		},
 
 		_Option{
-			"HTML Linter", "lint-html", newFileMatcher("*.html", "*.htm"),
+			"HTML Linter", "lint-html", newFileMatcher("**/*.html", "**/*.htm"),
 			newPatternMatcher("htmlhint "), newGenerator(_lintHtmlYaml),
 			"lint-html.yaml",
 		},
 
 		_Option{
-			"Markdown Linter", "lint-markdown", newFileMatcher("*.md"),
+			"Markdown Linter", "lint-markdown", newFileMatcher(_markdownFile),
 			newPatternMatcher("mdl "),
 			newGenerator(_lintMarkdownYaml), "lint-markdown.yaml",
 		},
@@ -108,29 +118,35 @@ func GetOptions() []Option {
 			"validate-openapi-schema.yaml",
 		},
 		_Option{
-			"Python Formatter", "format-python", newFileMatcher("*.py"),
+			"Python Formatter", "format-python", newFileMatcher(_pythonFile),
 			newPatternMatcher("black "),
 			newGenerator(_formatPythonYaml), "format-python.yaml",
 		},
 		_Option{
-			"Python Linter", "lint-python", newFileMatcher("*.py"),
+			"Python Linter", "lint-python", newFileMatcher(_pythonFile),
 			newPatternMatcher("pylint ", "ruff "),
 			newGenerator(_lintPythonYaml), "lint-python.yaml",
 		},
 		_Option{
-			"Shell Script Linter", "lint-shell-script", newFileMatcher("*.sh", "*.bash"),
+			"Shell Script Linter", "lint-shell-script", newFileMatcher("**/*.sh", "**/*.bash"),
 			newPatternMatcher("shellcheck "),
 			newGenerator(_lintShellScriptYaml), "lint-shell-script.yaml",
 		},
 		_Option{
-			"Solidity Linter", "lint-solidity", newFileMatcher("*.sol"),
+			"Solidity Linter", "lint-solidity", newFileMatcher("**/*.sol"),
 			newPatternMatcher("solhint "),
 			newGenerator(_lintSolidityYaml), "lint-solidity.yaml",
 		},
 		_Option{
-			"YAML Linter", "lint-yaml", newFileMatcher("*.yml", "*.yaml"),
+			"YAML Linter", "lint-yaml", newFileMatcher("**/*.yml", "**/*.yaml"),
 			newPatternMatcher("ibiqlik/action-yamllint@"),
 			newGenerator(_lintYamlYaml), "lint-yaml.yaml",
+		},
+		_Option{
+			"GitHub Actions Linter", "lint-github-actions",
+			newFileMatcher(".github/workflows/*.yml", ".github/workflows/*.yaml"),
+			newPatternMatcher( /*"actionlint",*/ "zizmor"),
+			newGenerator(_lintYamlYaml), "lint-github-actions.yaml",
 		},
 		_Option{
 			"Render.com blueprint Validator", "validate-render-blueprint", newFileMatcher("render.yml", "render.yaml"),
@@ -266,32 +282,20 @@ func getPath(rootDir string, fileName string) string {
 
 // Note: Go does not support "**" glob pattern
 func hasFile(rootDir string, globPattern string) bool {
+	log.Debug().
+		Str("rootDir", rootDir).
+		Str("globPattern", globPattern).
+		Msg("Glob pattern")
 	found := false
-	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if info.IsDir() {
-			// TODO(ashishb): In the long-term, add code to parse .gitignore
-			if info.Name() == ".git" || info.Name() == "node_modules" {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-		matched, err := filepath.Match(globPattern, info.Name())
-		if err != nil {
-			return err
-		}
-		if matched {
-			found = true
-			return filepath.SkipAll
-		}
-		return nil
+	err := doublestar.GlobWalk(os.DirFS(rootDir), globPattern, func(path string, d fs.DirEntry) error {
+		found = true
+		log.Trace().Msgf("hasFile(%s, %s) = %s", globPattern, rootDir, path)
+		return doublestar.SkipDir
 	})
 	if err != nil {
-		log.Panic().Err(err).Msgf("glob failed: '%s'", globPattern)
+		log.Error().
+			Err(err).Msgf("glob failed: '%s'", globPattern)
 	}
-	log.Trace().Msgf("hasFile(%s, %s) = %v", globPattern, rootDir, found)
 	return found
 }
 
