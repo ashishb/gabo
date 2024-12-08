@@ -31,6 +31,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Check YAML files with linter
         uses: ibiqlik/action-yamllint@v3
         with:
@@ -50,8 +53,10 @@ jobs:
                 level: warning
               trailing-spaces:
                 level: warning
+
       - name: Lint GitHub Actions
         uses: reviewdog/action-actionlint@v1
+
       - name: Check GitHub Actions with 'actionlint'
         # Ref: https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
         # shellcheck is too noisy and disabled
