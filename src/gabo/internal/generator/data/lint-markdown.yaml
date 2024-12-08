@@ -7,13 +7,13 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [main, master]
     paths:
-      - '**.md'
-      - '.github/workflows/lint-markdown.yaml'
+      - "**.md"
+      - ".github/workflows/lint-markdown.yaml"
   pull_request:
     branches: [main, master]
     paths:
-      - '**.md'
-      - '.github/workflows/lint-markdown.yaml'
+      - "**.md"
+      - ".github/workflows/lint-markdown.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

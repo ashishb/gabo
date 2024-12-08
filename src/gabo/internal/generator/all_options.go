@@ -146,7 +146,7 @@ func GetOptions() []Option {
 			"GitHub Actions Linter", "lint-github-actions",
 			newFileMatcher(".github/workflows/*.yml", ".github/workflows/*.yaml"),
 			newPatternMatcher( /*"actionlint",*/ "zizmor"),
-			newGenerator(_lintYamlYaml), "lint-github-actions.yaml",
+			newGenerator(_lintGitHubActionsYaml), "lint-github-actions.yaml",
 		},
 		_Option{
 			"Render.com blueprint Validator", "validate-render-blueprint", newFileMatcher("render.yml", "render.yaml"),

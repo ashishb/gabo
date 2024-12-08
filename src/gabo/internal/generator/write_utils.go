@@ -42,7 +42,7 @@ func dirExists(path string) bool {
 	if err != nil {
 		return false
 	}
-	if err == nil && !info.IsDir() {
+	if !info.IsDir() {
 		log.Warn().Msgf("Path exists but is not a directory: %s", path)
 		return false
 	}

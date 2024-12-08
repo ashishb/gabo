@@ -39,6 +39,8 @@ var (
 	_lintSolidityYaml string
 	//go:embed data/lint-yaml.yaml
 	_lintYamlYaml string
+	//go:embed data/lint-github-actions.yaml
+	_lintGitHubActionsYaml string
 	//go:embed data/translate-android.yaml
 	_translateAndroidYaml string
 	//go:embed data/validate-render-blueprint.yaml
