@@ -41,17 +41,17 @@ $ gabo --help
 
 Usage of gabo:
   -dir string
-    	Path to root of git directory (default ".")
+   Path to root of git directory (default ".")
   -for string
-    	Generate GitHub Action (options: build-android,lint-android,translate-android,compress-images,build-docker,build-npm,build-yarn,lint-docker,format-go,lint-go,check-go-releaser,lint-html,lint-markdown,validate-openapi-schema,format-python,lint-python,lint-shell-script,lint-solidity,lint-yaml,lint-github-actions,validate-render-blueprint)
+   Generate GitHub Action (options: build-android,lint-android,translate-android,compress-images,build-docker,build-npm,build-yarn,lint-docker,format-go,lint-go,check-go-releaser,lint-html,lint-markdown,validate-openapi-schema,format-python,lint-python,lint-shell-script,lint-solidity,lint-yaml,lint-github-actions,validate-render-blueprint)
   -force
-    	Force overwrite existing files (in generate mode)
+   Force overwrite existing files (in generate mode)
   -mode string
-    	Mode to operate in: [generate analyze] (default "analyze")
+   Mode to operate in: [generate analyze] (default "analyze")
   -verbose
-    	Enable verbose logging
+   Enable verbose logging
   -version
-    	Prints version of the binary
+   Prints version of the binary
 ```
 
 ### Sample usage - analyze a repository
