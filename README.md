@@ -1,6 +1,7 @@
 # GitHub Actions Boilerplate (`gabo`)
 
 [![Lint YAML](https://github.com/ashishb/gabo/actions/workflows/lint-yaml.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/lint-yaml.yaml) [![Lint Markdown](https://github.com/ashishb/gabo/actions/workflows/lint-markdown.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/lint-markdown.yaml)
+[![Lint GitHub Actions](https://github.com/ashishb/gabo/actions/workflows/lint-github-actions.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/lint-github-actions.yaml)
 [![Lint Go](https://github.com/ashishb/gabo/actions/workflows/lint-go.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/lint-go.yaml) [![Validate Go code formatting](https://github.com/ashishb/gabo/actions/workflows/format-go.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/format-go.yaml) [![Test](https://github.com/ashishb/gabo/actions/workflows/test-go.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/test-go.yaml)
 
 [![Check Go Releaser config for validity](https://github.com/ashishb/gabo/actions/workflows/check-goreleaser-config.yaml/badge.svg)](https://github.com/ashishb/gabo/actions/workflows/check-goreleaser-config.yaml)
