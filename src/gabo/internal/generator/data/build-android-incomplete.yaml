@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Validate Gradle Wrapper is a known binary
         uses: gradle/actions/wrapper-validation@v3

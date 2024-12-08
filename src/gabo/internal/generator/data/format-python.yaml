@@ -19,15 +19,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  formatython:
+  formatPython:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.12"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5

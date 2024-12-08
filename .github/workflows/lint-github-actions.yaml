@@ -76,5 +76,8 @@ jobs:
       - name: Install zizmor
         run: cargo install zizmor
 
-      - name: Run zizmor 🌈
+      - name: Run zizmor on GitHub Actions
         run: zizmor .github/workflows/*
+
+      - name: Run zizmor on gabo's internal generator data
+        run: zizmor src/gabo/internal/generator/data/*
