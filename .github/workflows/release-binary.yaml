@@ -10,9 +10,6 @@ on:
       - "src/gabo/cmd/gabo/version.txt"
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
 
   generateTag:
@@ -20,12 +17,15 @@ jobs:
     name: "Auto-generate Git tag whenever version.txt changes"
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write
 
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          persist-credentials: true  # Required to allow git fetch
           fetch-depth: 0
 
       - name: Fetch git tags
@@ -56,12 +56,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: generateTag
     timeout-minutes: 15
+    permissions:
+      contents: write
 
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          persist-credentials: true  # Required to allow git fetch
           fetch-depth: 0
 
       - name: Fetch git tags
