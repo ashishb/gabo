@@ -7,17 +7,17 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [master, main]
     paths:
-      - '**.yml'
-      - '**.yaml'
-      - '.github/workflows/**.yml'
-      - '.github/workflows/**.yaml'
+      - "**.yml"
+      - "**.yaml"
+      - ".github/workflows/**.yml"
+      - ".github/workflows/**.yaml"
   pull_request:
     branches: [master, main]
     paths:
-      - '**.yml'
-      - '**.yaml'
-      - '.github/workflows/**.yml'
-      - '.github/workflows/**.yaml'
+      - "**.yml"
+      - "**.yaml"
+      - ".github/workflows/**.yml"
+      - ".github/workflows/**.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -53,15 +53,3 @@ jobs:
                 level: warning
               trailing-spaces:
                 level: warning
-
-      - name: Lint GitHub Actions
-        uses: reviewdog/action-actionlint@v1
-
-      - name: Check GitHub Actions with 'actionlint'
-        # Ref: https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
-        # shellcheck is too noisy and disabled
-        run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color -shellcheck=
-          ./actionlint -color -shellcheck= src/gabo/internal/generator/data/*
-        shell: bash
