@@ -24,7 +24,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lintGitHubActions:
+  lintGitHubActionsWithActionLint:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -36,7 +36,7 @@ jobs:
           sparse-checkout: |
             .github/workflows
             src/gabo/internal/generator/data
-            sparse-checkout-cone-mode: false
+          sparse-checkout-cone-mode: false
 
       - name: Lint GitHub Actions
         uses: reviewdog/action-actionlint@v1
@@ -49,3 +49,32 @@ jobs:
           ./actionlint -color -shellcheck=
           ./actionlint -color -shellcheck= src/gabo/internal/generator/data/*
         shell: bash
+
+
+  lintGitHubActionsForSecurity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/workflows
+            src/gabo/internal/generator/data
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Install zizmor
+        run: cargo install zizmor
+
+      - name: Run zizmor 🌈
+        run: zizmor .github/workflows/*
