@@ -1,0 +1,51 @@
+---
+# Run this locally with act - https://github.com/nektos/act
+# act -j lintGitHubActions
+name: Lint GitHub Actions
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: [master, main]
+    paths:
+      - ".github/workflows/**.yml"
+      - ".github/workflows/**.yaml"
+      - "src/gabo/internal/generator/data/*.yml"
+      - "src/gabo/internal/generator/data/*.yaml"
+  pull_request:
+    branches: [master, main]
+    paths:
+      - ".github/workflows/**.yml"
+      - ".github/workflows/**.yaml"
+      - "src/gabo/internal/generator/data/*.yml"
+      - "src/gabo/internal/generator/data/*.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lintGitHubActions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/workflows
+            src/gabo/internal/generator/data
+            sparse-checkout-cone-mode: false
+
+      - name: Lint GitHub Actions
+        uses: reviewdog/action-actionlint@v1
+
+      - name: Check GitHub Actions with 'actionlint'
+        # Ref: https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
+        # shellcheck is too noisy and disabled
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color -shellcheck=
+          ./actionlint -color -shellcheck= src/gabo/internal/generator/data/*
+        shell: bash
