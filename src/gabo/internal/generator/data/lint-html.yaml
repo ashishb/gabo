@@ -5,15 +5,15 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [main, master]
     paths:
-      - '**.htm'
-      - '*.htm'
-      - '.github/workflows/lint-html.yaml'
+      - "**.htm"
+      - "*.htm"
+      - ".github/workflows/lint-html.yaml"
   pull_request:
     branches: [main, master]
     paths:
-      - '**.htm'
-      - '*.htm'
-      - '.github/workflows/lint-html.yaml'
+      - "**.htm"
+      - "*.htm"
+      - ".github/workflows/lint-html.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

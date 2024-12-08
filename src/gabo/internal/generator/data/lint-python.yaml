@@ -42,7 +42,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           # Options are pip, pipenv, or poetry
           cache: "pip"
-          cache-dependency-path: '**/requirements.txt'
+          cache-dependency-path: "**/requirements.txt"
 
       - name: Install dependencies
         run: find . -iname requirements.txt -exec pip install -r {} \;

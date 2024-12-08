@@ -7,15 +7,15 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [main, master]
     paths:
-      - '**.sh'
-      - '**.bash'
-      - '.github/workflows/lint-shell-script.yaml'
+      - "**.sh"
+      - "**.bash"
+      - ".github/workflows/lint-shell-script.yaml"
   pull_request:
     branches: [main, master]
     paths:
-      - '**.sh'
-      - '**.bash'
-      - '.github/workflows/lint-shell-script.yaml'
+      - "**.sh"
+      - "**.bash"
+      - ".github/workflows/lint-shell-script.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
