@@ -29,8 +29,13 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
           sparse-checkout: |
@@ -39,7 +44,7 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Lint GitHub Actions
-        uses: reviewdog/action-actionlint@v1
+        uses: reviewdog/action-actionlint@08ef4afa963243489a457cca426f705ce4e0d1a5 # v1.60.0
 
       - name: Check GitHub Actions with 'actionlint'
         # Ref: https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
@@ -61,8 +66,13 @@ jobs:
       actions: read
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
           sparse-checkout: |
@@ -71,7 +81,7 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@11df97af8e8102fd60b60a77dfbf58d40cd843b8 # v1.10.1
 
       - name: Install zizmor
         run: cargo install zizmor
