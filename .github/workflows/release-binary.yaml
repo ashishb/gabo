@@ -10,6 +10,9 @@ on:
       - "src/gabo/cmd/gabo/version.txt"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
 
   generateTag:
@@ -22,8 +25,13 @@ jobs:
 
     steps:
 
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: true  # Required to allow git fetch
           fetch-depth: 0
@@ -32,7 +40,7 @@ jobs:
         run: git fetch --force --tags
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version: stable
           cache-dependency-path: src/gabo/go.sum
@@ -44,7 +52,7 @@ jobs:
 
       - name: Create new tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.2
+        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
         with:
           custom_tag: ${{ steps.read-version.outputs.version }}
           tag_prefix: ""  # To prevent extra "v" in the prefix
@@ -61,8 +69,13 @@ jobs:
 
     steps:
 
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: true  # Required to allow git fetch
           fetch-depth: 0
@@ -70,14 +83,14 @@ jobs:
       - name: Fetch git tags
         run: git fetch --force --tags
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version: stable
           cache-dependency-path: src/gabo/go.sum
 
       # More assembly might be required: Docker logins, GPG, etc. It all depends
       # on your needs.
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@9ed2f89a662bf1735a48bc8557fd212fa902bebf # v6.1.0
         with:
           distribution: goreleaser
           version: latest
