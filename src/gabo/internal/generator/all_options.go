@@ -129,7 +129,7 @@ func GetOptions() []Option {
 		},
 		_Option{
 			"Shell Script Linter", "lint-shell-script", newFileMatcher("**/*.sh", "**/*.bash"),
-			newPatternMatcher("shellcheck "),
+			newPatternMatcher("shellcheck ", "action-shellcheck"),
 			newGenerator(_lintShellScriptYaml), "lint-shell-script.yaml",
 		},
 		_Option{
