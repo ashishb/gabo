@@ -23,6 +23,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Ref: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions:
+  contents: read
+
 jobs:
   lintGitHubActionsWithActionLint:
     runs-on: ubuntu-latest
@@ -74,7 +78,8 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
 
       - name: Install zizmor
-        run: cargo install zizmor
+        # Install zizmor if it's not already installed via the Rust cache
+        run: zizmor --help || cargo install zizmor
 
       - name: Run zizmor on GitHub Actions
         run: zizmor .github/workflows/*
