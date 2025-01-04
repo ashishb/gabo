@@ -24,7 +24,7 @@ jobs:
     name: Compress Images using Calibre
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     timeout-minutes: 15
 
