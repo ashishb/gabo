@@ -40,7 +40,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-          cache-dependency-path: src/gabo/go.sum
+          cache: false  # Disable caching to avoid cache poisoning
 
       - name: Install Go Releaser
         uses: goreleaser/goreleaser-action@v6
