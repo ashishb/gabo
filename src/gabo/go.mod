@@ -3,7 +3,7 @@ module github.com/ashishb/gabo/src/gabo
 go 1.20
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.7.1
+	github.com/bmatcuk/doublestar/v4 v4.8.0
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.10.0
 )
