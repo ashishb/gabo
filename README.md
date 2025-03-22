@@ -75,12 +75,15 @@ Wrote file .github/workflows/lint-docker.yaml
 
 - [x] build-android
 - [x] build-docker
+- [x] build-npm
+- [x] build-yarn
 - [x] check-go-releaser
 - [x] compress-images
 - [x] format-go
 - [x] format-python
 - [x] lint-android
 - [x] lint-docker
+- [x] lint-github-actions
 - [x] lint-go
 - [x] lint-html
 - [x] lint-markdown
@@ -88,7 +91,6 @@ Wrote file .github/workflows/lint-docker.yaml
 - [x] lint-shell-script
 - [x] lint-solidity
 - [x] lint-yaml
-- [x] lint-github-actions
 - [x] translate-android
 - [x] validate-openapi-schema
 - [x] validate-render-blueprint
