@@ -7,13 +7,22 @@ import (
 )
 
 const _validateSchemaTask = `
-      - name: Validate OpenAPI schema in %s
-        uses: mpetrunic/swagger-cli-action@v1.0.0
-        with:
-          command: 'validate %s/%s'
+      # Ref: https://github.com/daveshanley/vacuum
+      - name: Validate OpenAPI schema
+        working-directory: head
+        run:
+          docker run --rm -v $PWD:/work:ro dshanley/vacuum lint -d %s
+
+      # Ref: https://github.com/Tufin/oasdiff
+      - name: Running OpenAPI Spec diff action
+        env:
+          BASE: ./base/%s
+          REVISION: ./head/%s
+        run: |
+          docker run --rm -v $PWD:/code:ro -t tufin/oasdiff breaking --fail-on WARN -f githubactions "${BASE}" "${REVISION}"
 `
 
-var _openAPIFileList = []string{"**/openapi.yaml", "**/openapi.yml", "**/openapi.json"}
+var _openAPIFileList = []string{"openapi.yaml", "openapi.yml", "**/openapi.json"}
 
 func generateOpenAPISchemaValidator(repoDir string) (*string, error) {
 	found := false
@@ -43,7 +52,8 @@ func generateOpenAPISchemaValidatorInternal(template string, repoDir string, ope
 	}
 	str := template
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_validateSchemaTask, dir, dir, openAPIFile)
+		path := fmt.Sprintf("%s/%s", dir, openAPIFile)
+		str += fmt.Sprintf(_validateSchemaTask, path, path, path)
 	}
 	return &str, nil
 }

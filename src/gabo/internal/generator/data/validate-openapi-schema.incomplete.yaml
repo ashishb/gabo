@@ -34,7 +34,19 @@ jobs:
 
     steps:
 
-      - name: Checkout repository
+      - name: Checkout repository (current branch)
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          path: head
+          fetch-depth: 1
+
+      - name: Checkout repository (default branch)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.repository.default_branch }}
+          path: base
+          fetch-depth: 1
+
+      # Perform linter and backward compatibility checks here

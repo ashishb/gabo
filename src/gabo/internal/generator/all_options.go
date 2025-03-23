@@ -113,7 +113,7 @@ func GetOptions() []Option {
 		_Option{
 			"OpenAPI Schema Validator", "validate-openapi-schema",
 			newFileMatcher(_openAPIFileList...),
-			newPatternMatcher("mpetrunic/swagger-cli-action", "daveshanley/vacuum"),
+			newPatternMatcher("mpetrunic/swagger-cli-action", "dshanley/vacuum"),
 			newGenerator2(generateOpenAPISchemaValidator),
 			"validate-openapi-schema.yaml",
 		},
