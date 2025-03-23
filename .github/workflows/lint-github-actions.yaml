@@ -49,9 +49,8 @@ jobs:
         # Ref: https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
         # shellcheck is too noisy and disabled
         run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color -shellcheck=
-          ./actionlint -color -shellcheck= src/gabo/internal/generator/data/*
+          find .github/workflows -type f -print0 | xargs -0 -n1 -I % sh -c 'docker run --init --rm --network none -v "$PWD":/work:ro rhysd/actionlint:latest -shellcheck= /work/%'
+          find src/gabo/internal/generator/data -type f -print0 | xargs -0 -n1 -I % sh -c 'docker run --init --rm --network none -v "$PWD":/work:ro rhysd/actionlint:latest -shellcheck= /work/%'
         shell: bash
 
 
@@ -78,4 +77,4 @@ jobs:
         run: docker run --rm --network none -v "$PWD":/work:ro  ghcr.io/woodruffw/zizmor:latest --offline /work/.github/workflows
 
       - name: Run zizmor on gabo's internal generator data
-        run: find src/gabo/internal/generator/data -type f -exec docker run --rm --network none -v "$PWD":/work:ro  ghcr.io/woodruffw/zizmor:latest --offline /work/{} \;
+        run: find src/gabo/internal/generator/data -type f -print0 | xargs -0 -n1 -I % sh -c 'docker run --rm --network none -v "$PWD":/work:ro  ghcr.io/woodruffw/zizmor:latest --offline /work/%'
