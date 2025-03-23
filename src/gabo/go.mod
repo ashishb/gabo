@@ -1,6 +1,6 @@
 module github.com/ashishb/gabo/src/gabo
 
-go 1.20
+go 1.24
 
 require (
 	github.com/bmatcuk/doublestar/v4 v4.8.1
