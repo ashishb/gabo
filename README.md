@@ -82,8 +82,8 @@ Wrote file .github/workflows/lint-docker.yaml
 - [x] format-go
 - [x] format-python
 - [x] lint-android
-- [x] lint-docker
-- [x] lint-github-actions
+- [x] lint-docker using [hadolint](https://github.com/hadolint/hadolint)
+- [x] lint-github-actions using [actionlint](https://github.com/rhysd/actionlint) and [zizmor](https://github.com/woodruffw/zizmor/)
 - [x] lint-go
 - [x] lint-html
 - [x] lint-markdown
@@ -92,7 +92,7 @@ Wrote file .github/workflows/lint-docker.yaml
 - [x] lint-solidity
 - [x] lint-yaml
 - [x] translate-android
-- [x] validate-openapi-schema
-- [x] validate-render-blueprint
+- [x] validate-openapi-schema using [vacuum](https://github.com/daveshanley/vacuum) and [oasdiff](https://github.com/Tufin/oasdiff)
+- [x] validate-render-blueprint using [jsonschema](https://json-schema.org/)
 - [ ] build-rust
 - [ ] lint-rust
