@@ -13,6 +13,13 @@
 The actions runs only on push/pull requests against `main` and `master` branch, by default.
 Feel free to add more branches if you want to runs these checks when push/pull request against any other branches.
 
+- [x] Auto-generated high quality GitHub Actions
+- [x] Better file filters
+- [x] Explicit timeout
+- [x] Auto-cancelaion of stale executions
+- [x] Better caching
+- [x] Reduced security permissions on `GITHUB_TOKEN`
+
 ## Installation
 
 ```bash
