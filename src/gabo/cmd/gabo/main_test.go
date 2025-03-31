@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/stretchr/testify/require"
 	"os"
 	"path/filepath"
 	"testing"
@@ -15,7 +16,9 @@ func TestGenerateALinter(t *testing.T) {
 	assert.NoError(t, err)
 	t.Logf("Dir name is %s", dirPath)
 	// Cleanup
-	defer os.RemoveAll(dirPath)
+	defer func() {
+		require.NoError(t, os.RemoveAll(dirPath))
+	}()
 
 	setFlagOrFail(t, "dir", dirPath)
 	setFlagOrFail(t, "mode", _modeAnalyze)
