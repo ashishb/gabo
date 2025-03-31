@@ -83,7 +83,7 @@ func main() {
 // This will normalize values of certain flags like _gitDir as well
 func validateFlags() error {
 	if *_mode != _modeAnalyze && *_mode != _modeGenerate && !*_version {
-		return fmt.Errorf("Invalid mode: %s, valid values are %s",
+		return fmt.Errorf("invalid mode: %s, valid values are %s",
 			*_mode, _validModes)
 	}
 	if *_force && *_mode != _modeGenerate {
@@ -112,7 +112,7 @@ func validateGitDir() error {
 	if *_gitDir == "." {
 		path, err := os.Getwd()
 		if err != nil {
-			return fmt.Errorf("Unable to get current dir")
+			return fmt.Errorf("unable to get current dir")
 		}
 		_gitDir = &path
 	} else if strings.HasPrefix(*_gitDir, "~/") {
