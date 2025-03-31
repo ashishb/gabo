@@ -9,9 +9,6 @@ build_prod:
 go_lint:
 	GO111MODULE=on go mod tidy
 	GO111MODULE=on go vet ./...
-	# Deprecated
-	# golint -set_exit_status ./...
-	go tool fix ./..
 	golangci-lint run
 
 go_format:
