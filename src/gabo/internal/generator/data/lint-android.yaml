@@ -54,12 +54,12 @@ jobs:
           java-version: "17"
 
       - name: Use Gradle Build cache
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326  # v4.4.0
         with:
           gradle-version: "current"
 
       - name: Validate Gradle Wrapper is a known binary
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@8379f6a1328ee0e06e2bb424dadb7b159856a326  # v4.4.0
 
       #      # Required by apps that depend on Firebase
       #      - name: Add mock google-services.json
@@ -70,7 +70,7 @@ jobs:
       - name: Run Gradle Lint
         run: ./gradlew lint
 
-      - uses: yutailang0119/action-android-lint@v3
+      - uses: yutailang0119/action-android-lint@8345a8dece583030445b0b5f9611209431d601c4  # v5.0.0
         with:
           report-path: "**/build/reports/*.xml"  # Support glob patterns by https://www.npmjs.com/package/@actions/glob
         continue-on-error: false  # If annotations contain error of severity, action-android-lint exit 1.

@@ -36,7 +36,7 @@ jobs:
           persist-credentials: false
 
       - name: solhint
-        uses: contractshark/inject-solhint-ci@master
+        uses: contractshark/inject-solhint-ci@7d2f4b657ae76a93605d045e7be0378b43bb2382  # v1.0.0+alpha
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review  # Change reporter

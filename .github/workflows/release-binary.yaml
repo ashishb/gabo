@@ -1,7 +1,7 @@
 ---
 name: Create release
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches: ["main", "master"]
     # Release whenever this file changes
@@ -43,7 +43,7 @@ jobs:
 
       - name: Create new tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.2
+        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b  # v6.2
         with:
           custom_tag: ${{ steps.read-version.outputs.version }}
           tag_prefix: ""  # To prevent extra "v" in the prefix
@@ -76,7 +76,7 @@ jobs:
 
       # More assembly might be required: Docker logins, GPG, etc. It all depends
       # on your needs.
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552  # v6.3.0
         with:
           distribution: goreleaser
           version: latest
