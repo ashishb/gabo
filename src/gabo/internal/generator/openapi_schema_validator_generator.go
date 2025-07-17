@@ -46,7 +46,9 @@ func generateOpenAPISchemaValidator(repoDir string) (*string, error) {
 	return &template, nil
 }
 
-func generateOpenAPISchemaValidatorInternal(template string, repoDir string, openAPIFile string) (*string, error) {
+func generateOpenAPISchemaValidatorInternal(
+	template string, repoDir string, openAPIFile string,
+) (*string, error) {
 	dirs, err := getDirsContaining(repoDir, openAPIFile)
 	if err != nil {
 		return nil, err
