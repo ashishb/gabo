@@ -101,7 +101,7 @@ func GetOptions() []Option {
 
 		_Option{
 			"HTML Linter", "lint-html", newFileMatcher("**/*.html", "**/*.htm"),
-			newPatternMatcher("htmlhint "), newGenerator(_lintHtmlYaml),
+			newPatternMatcher("htmlhint "), newGenerator(_lintHTMLYaml),
 			"lint-html.yaml",
 		},
 
@@ -149,7 +149,8 @@ func GetOptions() []Option {
 			newGenerator(_lintGitHubActionsYaml), "lint-github-actions.yaml",
 		},
 		_Option{
-			"Render.com blueprint Validator", "validate-render-blueprint", newFileMatcher("render.yml", "render.yaml"),
+			"Render.com blueprint Validator", "validate-render-blueprint",
+			newFileMatcher("render.yml", "render.yaml"),
 			newPatternMatcher("GrantBirki/json-yaml-validate"),
 			newGenerator(_validateRenderBlueprintYaml), "validate-render-blueprint.yaml",
 		},
@@ -287,7 +288,7 @@ func hasFile(rootDir string, globPattern string) bool {
 		Str("globPattern", globPattern).
 		Msg("Glob pattern")
 	found := false
-	err := doublestar.GlobWalk(os.DirFS(rootDir), globPattern, func(path string, d fs.DirEntry) error {
+	err := doublestar.GlobWalk(os.DirFS(rootDir), globPattern, func(path string, _ fs.DirEntry) error {
 		found = true
 		log.Trace().Msgf("hasFile(%s, %s) = %s", globPattern, rootDir, path)
 		return doublestar.SkipDir
