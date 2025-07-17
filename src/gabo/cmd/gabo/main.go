@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -107,12 +108,12 @@ func validateFlags() error {
 // validateGitDir validates the provided dir is a git directory
 func validateGitDir() error {
 	if len(*_gitDir) == 0 {
-		return fmt.Errorf("dir cannot be empty")
+		return errors.New("dir cannot be empty")
 	}
 	if *_gitDir == "." {
 		path, err := os.Getwd()
 		if err != nil {
-			return fmt.Errorf("unable to get current dir")
+			return errors.New("unable to get current dir")
 		}
 		_gitDir = &path
 	} else if strings.HasPrefix(*_gitDir, "~/") {

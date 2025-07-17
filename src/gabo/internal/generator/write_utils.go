@@ -2,10 +2,11 @@ package generator
 
 import (
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/rs/zerolog/log"
 )
 
 func writeOrWarn(outFilePath string, data string, force bool) error {
@@ -14,7 +15,7 @@ func writeOrWarn(outFilePath string, data string, force bool) error {
 	}
 	if !dirExists(filepath.Dir(outFilePath)) {
 		log.Debug().Msgf("Creating directory %s", filepath.Dir(outFilePath))
-		err := os.MkdirAll(filepath.Dir(outFilePath), 0755)
+		err := os.MkdirAll(filepath.Dir(outFilePath), 0o755)
 		if err != nil {
 			return err
 		}

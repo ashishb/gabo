@@ -1,12 +1,12 @@
 package generator
 
 import (
-	"github.com/bmatcuk/doublestar/v4"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/bmatcuk/doublestar/v4"
 	"github.com/rs/zerolog/log"
 )
 
