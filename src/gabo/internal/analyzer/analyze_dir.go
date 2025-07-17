@@ -2,12 +2,13 @@ package analyzer
 
 import (
 	"fmt"
-	"github.com/ashishb/gabo/src/gabo/internal/generator"
-	"github.com/rs/zerolog/log"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/ashishb/gabo/src/gabo/internal/generator"
+	"github.com/rs/zerolog/log"
 )
 
 func generateCommand(flagName string, rootDir string) string {

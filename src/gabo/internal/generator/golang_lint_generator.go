@@ -1,11 +1,13 @@
 package generator
 
 import (
+	"errors"
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 const _goLangLintTask = `
@@ -23,7 +25,7 @@ const _goLangLintTask = `
           working-directory: "%s"
 `
 
-var errNoSuchDir = fmt.Errorf("no such dir")
+var errNoSuchDir = errors.New("no such dir")
 
 func generateGoLintYaml(repoDir string) (*string, error) {
 	dirs, err := getDirsContaining(repoDir, "go.mod")

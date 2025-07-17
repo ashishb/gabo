@@ -13,6 +13,7 @@ go_lint:
 
 go_format:
 	go fmt ./...
+	golangci-lint run --fix
 
 format: go_format
 
