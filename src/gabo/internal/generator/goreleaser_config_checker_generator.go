@@ -3,6 +3,7 @@ package generator
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 )
@@ -46,8 +47,10 @@ func generateGoReleaserCheckerInternal(template, repoDir, releaserFile string) (
 		return nil, err
 	}
 	str := template
+	var strSb49 strings.Builder
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_goReleaserCheckerTask, dir, releaserFile)
+		strSb49.WriteString(fmt.Sprintf(_goReleaserCheckerTask, dir, releaserFile))
 	}
+	str += strSb49.String()
 	return &str, nil
 }

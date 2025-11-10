@@ -1,6 +1,9 @@
 package generator
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const _setupNodeJsTask = `
       - name: "Setup Node.js for %s"
@@ -23,9 +26,11 @@ func generateBuildNpmYaml(repoDir string) (*string, error) {
 		return nil, err
 	}
 	str := _buildNpmTemplate
+	var strSb26 strings.Builder
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_setupNodeJsTask, dir, dir)
-		str += fmt.Sprintf(_buildNpmTask, dir, dir)
+		strSb26.WriteString(fmt.Sprintf(_setupNodeJsTask, dir, dir))
+		strSb26.WriteString(fmt.Sprintf(_buildNpmTask, dir, dir))
 	}
+	str += strSb26.String()
 	return &str, nil
 }

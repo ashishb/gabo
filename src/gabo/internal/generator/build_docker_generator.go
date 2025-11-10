@@ -1,6 +1,9 @@
 package generator
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const _buildDockerTask = `
       - name: Docker build using %s/Dockerfile
@@ -27,9 +30,11 @@ func generateBuildDockerYaml(repoDir string) (*string, error) {
 		return nil, err
 	}
 	str := _buildDockerTemplate
+	var strSb30 strings.Builder
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_buildDockerTask+"\n\n", dir, dir)
-		str += fmt.Sprintf(_checkDockerWithDiveTask, dir, dir)
+		strSb30.WriteString(fmt.Sprintf(_buildDockerTask+"\n\n", dir, dir))
+		strSb30.WriteString(fmt.Sprintf(_checkDockerWithDiveTask, dir, dir))
 	}
+	str += strSb30.String()
 	return &str, nil
 }
