@@ -1,6 +1,9 @@
 package generator
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const _buildAndroidTask = `
       - name: Build with Gradle (dir %s)
@@ -16,8 +19,10 @@ func generateBuildAndroidYaml(repoDir string) (*string, error) {
 		return nil, err
 	}
 	str := _buildAndroidTemplate
+	var strSb19 strings.Builder
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_buildAndroidTask, dir, dir)
+		strSb19.WriteString(fmt.Sprintf(_buildAndroidTask, dir, dir))
 	}
+	str += strSb19.String()
 	return &str, nil
 }

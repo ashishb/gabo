@@ -3,6 +3,7 @@ package generator
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 )
@@ -54,9 +55,11 @@ func generateOpenAPISchemaValidatorInternal(
 		return nil, err
 	}
 	str := template
+	var strSb57 strings.Builder
 	for _, dir := range dirs {
 		path := fmt.Sprintf("%s/%s", dir, openAPIFile)
-		str += fmt.Sprintf(_validateSchemaTask, path, path, path)
+		strSb57.WriteString(fmt.Sprintf(_validateSchemaTask, path, path, path))
 	}
+	str += strSb57.String()
 	return &str, nil
 }

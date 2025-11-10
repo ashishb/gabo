@@ -1,6 +1,9 @@
 package generator
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const _setupYarnTask = `
       - name: "Setup Node.js for %s"
@@ -23,9 +26,11 @@ func generateBuildYarnYaml(repoDir string) (*string, error) {
 		return nil, err
 	}
 	str := _buildYarnTemplate
+	var strSb26 strings.Builder
 	for _, dir := range dirs {
-		str += fmt.Sprintf(_setupYarnTask, dir, dir)
-		str += fmt.Sprintf(_buildYarnTask, dir, dir)
+		strSb26.WriteString(fmt.Sprintf(_setupYarnTask, dir, dir))
+		strSb26.WriteString(fmt.Sprintf(_buildYarnTask, dir, dir))
 	}
+	str += strSb26.String()
 	return &str, nil
 }
