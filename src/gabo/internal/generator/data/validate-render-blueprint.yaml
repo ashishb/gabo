@@ -44,7 +44,7 @@ jobs:
           wget https://render.com/schema/render.yaml.json -O /tmp/render.yaml.json
 
       - name: Validate Render Blueprint
-        uses: GrantBirki/json-yaml-validate@250fa0dc7d7f4a888b24dc2a6b2ff589753fba70  # v3.3.2@v3
+        uses: GrantBirki/json-yaml-validate@9bbaa8474e3af4e91f25eda8ac194fdc30564d96  # v3.3.2@v3
         with:
           yaml_schema: /tmp/render.yaml.json  # validate YAML files against the schema
           yaml_as_json: true
