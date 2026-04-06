@@ -1,0 +1,65 @@
+---
+name: Update version
+
+on:  # yamllint disable-line rule:truthy
+  schedule:
+    - cron: "0 0 * * 0"  # Weekly on Sunday at midnight UTC
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Ref: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token
+permissions:
+  contents: write
+
+jobs:
+
+  updateVersion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Check if version.txt has changed since last weekly run
+        id: check-changes
+        run: |
+          LAST_VERSION_COMMIT=$(git log -1 --format="%H" -- src/gabo/cmd/gabo/version.txt)
+          if [ -z "${LAST_VERSION_COMMIT}" ]; then
+            echo "new_commits=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          NEW_COMMITS=$(git log "${LAST_VERSION_COMMIT}..HEAD" --oneline -- . \
+            ':(exclude)src/gabo/cmd/gabo/version.txt' | wc -l | xargs)
+          echo "new_commits=${NEW_COMMITS}" >> "$GITHUB_OUTPUT"
+
+      - name: Bump patch version in version.txt
+        if: steps.check-changes.outputs.new_commits != '0'
+        run: |
+          VERSION=$(cat src/gabo/cmd/gabo/version.txt)
+          VER="${VERSION#v}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VER"
+          if ! [[ "$PATCH" =~ ^[0-9]+$ ]]; then
+            echo "Error: patch segment '${PATCH}' is not a valid integer" >&2
+            exit 1
+          fi
+          PATCH=$((PATCH + 1))
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          printf '%s\n' "$NEW_VERSION" > src/gabo/cmd/gabo/version.txt
+
+      - name: Commit and push updated version.txt
+        if: steps.check-changes.outputs.new_commits != '0'
+        run: |
+          VERSION=$(cat src/gabo/cmd/gabo/version.txt)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/gabo/cmd/gabo/version.txt
+          git commit -m "chore: bump version to ${VERSION}"
+          git push
