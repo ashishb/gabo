@@ -28,8 +28,8 @@ func generateBuildNpmYaml(repoDir string) (*string, error) {
 	str := _buildNpmTemplate
 	var strSb26 strings.Builder
 	for _, dir := range dirs {
-		strSb26.WriteString(fmt.Sprintf(_setupNodeJsTask, dir, dir))
-		strSb26.WriteString(fmt.Sprintf(_buildNpmTask, dir, dir))
+		fmt.Fprintf(&strSb26, _setupNodeJsTask, dir, dir)
+		fmt.Fprintf(&strSb26, _buildNpmTask, dir, dir)
 	}
 	str += strSb26.String()
 	return &str, nil

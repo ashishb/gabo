@@ -58,7 +58,7 @@ func generateOpenAPISchemaValidatorInternal(
 	var strSb57 strings.Builder
 	for _, dir := range dirs {
 		path := fmt.Sprintf("%s/%s", dir, openAPIFile)
-		strSb57.WriteString(fmt.Sprintf(_validateSchemaTask, path, path, path))
+		fmt.Fprintf(&strSb57, _validateSchemaTask, path, path, path)
 	}
 	str += strSb57.String()
 	return &str, nil

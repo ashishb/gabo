@@ -49,7 +49,7 @@ func generateGoReleaserCheckerInternal(template, repoDir, releaserFile string) (
 	str := template
 	var strSb49 strings.Builder
 	for _, dir := range dirs {
-		strSb49.WriteString(fmt.Sprintf(_goReleaserCheckerTask, dir, releaserFile))
+		fmt.Fprintf(&strSb49, _goReleaserCheckerTask, dir, releaserFile)
 	}
 	str += strSb49.String()
 	return &str, nil

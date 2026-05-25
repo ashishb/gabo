@@ -228,8 +228,9 @@ func newGenerator2(f func(repoDir string) (*string, error)) _Generator {
 }
 
 func GetOptionFlags() []string {
-	result := make([]string, 0)
-	for _, option := range GetOptions() {
+	options := GetOptions()
+	result := make([]string, 0, len(options))
+	for _, option := range options {
 		result = append(result, option.FlagName())
 	}
 	return result

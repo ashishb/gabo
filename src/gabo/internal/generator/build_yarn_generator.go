@@ -28,8 +28,8 @@ func generateBuildYarnYaml(repoDir string) (*string, error) {
 	str := _buildYarnTemplate
 	var strSb26 strings.Builder
 	for _, dir := range dirs {
-		strSb26.WriteString(fmt.Sprintf(_setupYarnTask, dir, dir))
-		strSb26.WriteString(fmt.Sprintf(_buildYarnTask, dir, dir))
+		fmt.Fprintf(&strSb26, _setupYarnTask, dir, dir)
+		fmt.Fprintf(&strSb26, _buildYarnTask, dir, dir)
 	}
 	str += strSb26.String()
 	return &str, nil
