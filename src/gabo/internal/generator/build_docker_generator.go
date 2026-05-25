@@ -32,8 +32,8 @@ func generateBuildDockerYaml(repoDir string) (*string, error) {
 	str := _buildDockerTemplate
 	var strSb30 strings.Builder
 	for _, dir := range dirs {
-		strSb30.WriteString(fmt.Sprintf(_buildDockerTask+"\n\n", dir, dir))
-		strSb30.WriteString(fmt.Sprintf(_checkDockerWithDiveTask, dir, dir))
+		fmt.Fprintf(&strSb30, _buildDockerTask+"\n\n", dir, dir)
+		fmt.Fprintf(&strSb30, _checkDockerWithDiveTask, dir, dir)
 	}
 	str += strSb30.String()
 	return &str, nil

@@ -21,7 +21,7 @@ func generateBuildAndroidYaml(repoDir string) (*string, error) {
 	str := _buildAndroidTemplate
 	var strSb19 strings.Builder
 	for _, dir := range dirs {
-		strSb19.WriteString(fmt.Sprintf(_buildAndroidTask, dir, dir))
+		fmt.Fprintf(&strSb19, _buildAndroidTask, dir, dir)
 	}
 	str += strSb19.String()
 	return &str, nil

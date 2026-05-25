@@ -35,7 +35,7 @@ func generateGoLintYaml(repoDir string) (*string, error) {
 	str := _lintGoTemplate
 	var strSb36 strings.Builder
 	for _, dir := range dirs {
-		strSb36.WriteString(fmt.Sprintf(_goLangLintTask, dir, dir, dir))
+		fmt.Fprintf(&strSb36, _goLangLintTask, dir, dir, dir)
 	}
 	str += strSb36.String()
 	return &str, nil
