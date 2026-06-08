@@ -31,7 +31,7 @@ jobs:
           persist-credentials: false
 
       - name: Translate strings.xml to supported languages
-        uses: ashishb/android-auto-translate@465b9bb4feb7ce761cad417cf9faac720f8abdfa  # v1.0.0
+        uses: ashishb/android-auto-translate@ac3c8b708c75ae7c038f96fd946d7745314363d8  # v1.1.0
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1  # v8.1.1
