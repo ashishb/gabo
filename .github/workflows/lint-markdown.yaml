@@ -7,13 +7,13 @@ on:  # yamllint disable-line rule:truthy
   push:
     branches: [master, main]
     paths:
-      - '**.md'
-      - '.github/workflows/lint-markdown.yaml'
+      - "**.md"
+      - ".github/workflows/lint-markdown.yaml"
   pull_request:
     branches: [master, main]
     paths:
-      - '**.md'
-      - '.github/workflows/lint-markdown.yaml'
+      - "**.md"
+      - ".github/workflows/lint-markdown.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,13 +38,10 @@ jobs:
         # See https://github.com/ruby/setup-ruby#versioning
         uses: ruby/setup-ruby@9eb537ca036ebaed86729dcb9309076e4c5c3b74  # v1.314.0
         with:
-          ruby-version: 3.0
-
-      - name: Install dependencies
-        run: gem install mdl
+          ruby-version: 4.0
 
       - name: Run tests
         # Rule list: https://github.com/markdownlint/markdownlint/blob/main/docs/RULES.md
         # Don't check for line length (MD013)
         # Don't care about list ordering (MD029)
-        run: mdl --git-recurse --rules ~MD013,~MD029 .
+        run: gem exec mdl --git-recurse --rules ~MD013,~MD029 .
